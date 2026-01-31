@@ -6,6 +6,8 @@ using UnityEngine.InputSystem;
 using UnityEngine.Windows;
 
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(MeshFilter))]
+[RequireComponent(typeof(MeshRenderer))]
 [RequireComponent(typeof(NPCKnockout))]
 public class PlayerCtrl : MonoBehaviour
 {
@@ -23,6 +25,18 @@ public class PlayerCtrl : MonoBehaviour
 
     [Tooltip("自身のRigidbody")]
     private Rigidbody _rigidbody = null;
+
+    [Tooltip("自身のMeshFilter")]
+    private MeshFilter _meshFilter = null;
+
+    [Tooltip("自身のMeshRenderer")]
+    private MeshRenderer _meshRenderer = null;
+
+    [Tooltip("変装前のMesh")]
+    private Mesh _originalMesh = null;
+
+    [Tooltip("変装前のMat")]
+    private Material _originalMat = null;
 
     [Tooltip("範囲内のNPCを気絶させる")]
     private NPCKnockout _npcKnockout = null;
@@ -46,6 +60,12 @@ public class PlayerCtrl : MonoBehaviour
 
         // RequireComponent
         _rigidbody = GetComponent<Rigidbody>();
+        _meshFilter = GetComponent<MeshFilter>();
+        _meshRenderer = GetComponent<MeshRenderer>();
+
+        // 変装前の見た目を保持
+        _originalMesh = _meshFilter.mesh;
+        _originalMat = _meshRenderer.material;
     }
 
     private void OnDestroy()
@@ -120,5 +140,25 @@ public class PlayerCtrl : MonoBehaviour
             Vector3 deltaV = targetHoriz - horiz;
             _rigidbody.AddForce(deltaV, ForceMode.VelocityChange);
         }
+    }
+
+    /// <summary>
+    /// 変装
+    /// </summary>
+    /// <param name="mesh"></param>
+    /// <param name="material"></param>
+    public void Disguise(Mesh mesh, Material material)
+    {
+        _meshFilter.mesh = mesh;
+        _meshRenderer.material = material;
+    }
+
+    /// <summary>
+    /// 変装を解く
+    /// </summary>
+    public void Undisguise()
+    {
+        _meshFilter.mesh = _originalMesh;
+        _meshRenderer.material = _originalMat;
     }
 }
