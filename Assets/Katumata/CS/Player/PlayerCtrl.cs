@@ -6,6 +6,8 @@ using UnityEngine.InputSystem;
 using UnityEngine.Windows;
 
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(MeshFilter))]
+[RequireComponent(typeof(MeshRenderer))]
 [RequireComponent(typeof(NPCKnockout))]
 public class PlayerCtrl : MonoBehaviour
 {
@@ -24,8 +26,23 @@ public class PlayerCtrl : MonoBehaviour
     [Tooltip("自身のRigidbody")]
     private Rigidbody _rigidbody = null;
 
+    [Tooltip("自身のMeshFilter")]
+    private MeshFilter _meshFilter = null;
+
+    [Tooltip("自身のMeshRenderer")]
+    private MeshRenderer _meshRenderer = null;
+
+    [Tooltip("変装前のMesh")]
+    private Mesh _originalMesh = null;
+
+    [Tooltip("変装前のMat")]
+    private Material _originalMat = null;
+
     [Tooltip("範囲内のNPCを気絶させる")]
     private NPCKnockout _npcKnockout = null;
+
+    [Tooltip("使用中のカメラ")]
+    private Camera _cam = null;
 
     [SerializeField, Header("NPCKnockout用パラメータ")]
     private KnockoutParam KnockoutParam = new KnockoutParam();
@@ -46,6 +63,15 @@ public class PlayerCtrl : MonoBehaviour
 
         // RequireComponent
         _rigidbody = GetComponent<Rigidbody>();
+        _meshFilter = GetComponent<MeshFilter>();
+        _meshRenderer = GetComponent<MeshRenderer>();
+
+        // 変装前の見た目を保持
+        _originalMesh = _meshFilter.mesh;
+        _originalMat = _meshRenderer.material;
+
+        // メインカメラ取得
+        _cam = Camera.main;
     }
 
     private void OnDestroy()
@@ -104,21 +130,59 @@ public class PlayerCtrl : MonoBehaviour
     {
         // 移動（本当ならスレッドを作成し、移動入力を受け付けない時はWaitさせる方が綺麗なコードになる）
         {
-            if (_inputDirection.sqrMagnitude > 1.0f)
+            Vector3 moveDir = _inputDirection;
+
+            // カメラがnullでなければ、カメラの角度を考慮する
+            if (_cam != null)
+            {
+                // カメラ基準でワールド移動方向へ変換
+                Vector3 camForward = _cam.transform.forward;
+                camForward.y = 0f;
+                camForward.Normalize();
+
+                Vector3 camRight = _cam.transform.right;
+                camRight.y = 0f;
+                camRight.Normalize();
+
+                // カメラ基準の移動方向を計算
+                moveDir = camRight * _inputDirection.x + camForward * _inputDirection.z;
+            }
+
+            if (moveDir.sqrMagnitude > 1.0f)
             {
                 // 正規化
-                _inputDirection.Normalize();
+                moveDir.Normalize();
             }
 
             Vector3 v = _rigidbody.velocity;
             Vector3 horiz = new Vector3(v.x, 0f, v.z);
 
             // 一定速度
-            Vector3 targetHoriz = _inputDirection * _moveSpeed;
+            Vector3 targetHoriz = moveDir * _moveSpeed;
 
             // 差分だけ速度変更
             Vector3 deltaV = targetHoriz - horiz;
             _rigidbody.AddForce(deltaV, ForceMode.VelocityChange);
         }
+    }
+
+    /// <summary>
+    /// 変装
+    /// </summary>
+    /// <param name="mesh"></param>
+    /// <param name="material"></param>
+    public void Disguise(Mesh mesh, Material material)
+    {
+        _meshFilter.mesh = mesh;
+        _meshRenderer.material = material;
+    }
+
+    /// <summary>
+    /// 変装を解く
+    /// </summary>
+    public void Undisguise()
+    {
+        _meshFilter.mesh = _originalMesh;
+        _meshRenderer.material = _originalMat;
     }
 }
