@@ -44,11 +44,27 @@ public class PlayerCtrl : MonoBehaviour
     [Tooltip("g—p’†‚ÌƒJƒƒ‰")]
     private Camera _cam = null;
 
+    [Tooltip("Œ»İ•Ï‘•’†‚ÌŒx”õˆõ")]
+    private EnemyMove _currentDisguiseEnemy = null;
+
+    [Tooltip("Œ»İ•Ï‘•’†‚ÌŒx”õˆõ‚ÌTag")]
+    private string _currentDisguiseTag = string.Empty;
+
     [SerializeField, Header("NPCKnockout—pƒpƒ‰ƒ[ƒ^")]
     private KnockoutParam KnockoutParam = new KnockoutParam();
 
     [SerializeField, Header("ˆÚ“®‘¬“x")]
     private float _moveSpeed = 0.0f;
+
+    /// <summary>
+    /// Œ»İ•Ï‘•’†‚ÌŒx”õˆõ‚ÌID
+    /// </summary>
+    public int CurrentDisguiseID => _currentDisguiseEnemy.GetId();
+
+    /// <summary>
+    /// Œ»İ•Ï‘•’†‚ÌŒx”õˆõ‚ÌTag
+    /// </summary>
+    public string CurrentDisguiseTag => _currentDisguiseTag;
 
     /// <summary>
     /// 
@@ -175,6 +191,21 @@ public class PlayerCtrl : MonoBehaviour
     {
         _meshFilter.mesh = mesh;
         _meshRenderer.material = material;
+    }
+
+    /// <summary>
+    /// •Ï‘•
+    /// </summary>
+    /// <param name="mesh"></param>
+    /// <param name="material"></param>
+    public void Disguise(Mesh mesh, Material material, EnemyMove enemy)
+    {
+        _meshFilter.mesh = mesh;
+        _meshRenderer.material = material;
+
+        // Œ»İ•Ï‘•’†‚ÌŒx”õˆõ‚ÆTag‚ğæ“¾
+        _currentDisguiseEnemy = enemy;
+        _currentDisguiseTag = enemy.gameObject.tag;
     }
 
     /// <summary>

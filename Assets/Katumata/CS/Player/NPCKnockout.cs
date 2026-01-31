@@ -116,7 +116,7 @@ public class NPCKnockout
                 }
 
                 // •Ï‘•
-                _playerCtrl.Disguise(meshFilter.mesh, meshRenderer.material);
+                _playerCtrl.Disguise(meshFilter.mesh, meshRenderer.material, _currentKnockoutEnemy);
             }
         }
     }
