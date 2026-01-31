@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.Windows;
 
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(NPCKnockout))]
 public class PlayerCtrl : MonoBehaviour
 {
     [Tooltip("PL入力のInputSystem")]
@@ -23,6 +24,12 @@ public class PlayerCtrl : MonoBehaviour
     [Tooltip("自身のRigidbody")]
     private Rigidbody _rigidbody = null;
 
+    [Tooltip("範囲内のNPCを気絶させる")]
+    private NPCKnockout _npcKnockout = null;
+
+    [SerializeField, Header("NPCKnockout用パラメータ")]
+    private KnockoutParam KnockoutParam = new KnockoutParam();
+
     [SerializeField, Header("移動速度")]
     private float _moveSpeed = 0.0f;
 
@@ -31,6 +38,9 @@ public class PlayerCtrl : MonoBehaviour
     /// </summary>
     private void Awake()
     {
+        // 初期インスタンス作成
+        _npcKnockout = new NPCKnockout(this, KnockoutParam);
+
         // PlayerControlsの初期設定
         InputSystemInitSetting();
 
@@ -57,14 +67,18 @@ public class PlayerCtrl : MonoBehaviour
         // 割り当て
         {
             // Horizontalに割り当てる
-            var horizontal = _playerInput.Direction.Horizontal;
+            var horizontal = _playerInput.Player.Horizontal;
             horizontal.started += Horizontal;
             horizontal.canceled += Horizontal;
 
             // Verticalに割り当てる
-            var vertical = _playerInput.Direction.Vertical;
+            var vertical = _playerInput.Player.Vertical;
             vertical.started += Vertical;
             vertical.canceled += Vertical;
+
+            // Knockoutに割り当てる
+            var knockout = _playerInput.Player.Knockout;
+            knockout.started += _npcKnockout.Knockout;
         }
     }
 
