@@ -4,5 +4,12 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Munakata/MunakataStage.unity
+    guid: 92553c423aeefb54cbdd85e6a1b19c9b
+  - enabled: 1
+    path: Assets/Munakata/ResultScene.unity
+    guid: a77dd9e2676378e40976407dd9555c7d
   m_configObjects: {}
+  m_UseUCBPForAssetBundles: 0
