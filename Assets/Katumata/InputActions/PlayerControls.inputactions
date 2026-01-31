@@ -2,7 +2,7 @@
     "name": "PlayerControls",
     "maps": [
         {
-            "name": "Direction",
+            "name": "Player",
             "id": "995792ab-712d-47ac-bbd4-2adf1cf7c101",
             "actions": [
                 {
@@ -18,6 +18,15 @@
                     "name": "Vertical",
                     "type": "Button",
                     "id": "8e8a66b3-c34d-4b46-a4da-a0476e3da328",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Knockout",
+                    "type": "Button",
+                    "id": "54f8ea14-d17b-492c-9ed1-6c9ecdf86b12",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -288,6 +297,28 @@
                     "action": "Vertical",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "e8856d39-dc23-4d12-a309-bfe2dfa023a6",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Knockout",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0c61cbb0-b6fc-408d-a9fe-baed1807911b",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Knockout",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }
