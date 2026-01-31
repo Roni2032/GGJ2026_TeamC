@@ -1,9 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditorInternal;
 using UnityEngine;
 
 public class EnemyMove : MonoBehaviour
 {
+    enum ENEMYSTATE
+    {
+        None,
+        Normal,
+        Down
+    }
+    // 現在の状態
+    private int m_state;
+
     // 敵が通るための道
     [SerializeField] GameObject m_moveEnemyRoad;
     private GameObject[] m_moveEnemyPoints;
@@ -122,5 +132,17 @@ public class EnemyMove : MonoBehaviour
     public void SetMoveFlag(bool moveFlag)
     {
         m_moveFlag = moveFlag;
+    }
+
+    // 現在ステートのゲッタ
+    public int GetState()
+    {
+        return m_state;
+    }
+
+    // 現在ステートのセッタ
+    public void SetState(int state)
+    {
+        m_state = state;
     }
 }
