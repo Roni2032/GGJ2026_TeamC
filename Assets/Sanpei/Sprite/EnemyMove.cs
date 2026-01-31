@@ -5,14 +5,17 @@ using UnityEngine;
 
 public class EnemyMove : MonoBehaviour
 {
-    enum ENEMYSTATE
-    {
-        None,
-        Normal,
-        Down
-    }
-    // 現在の状態
-    private int m_state;
+    //enum ENEMYSTATE
+    //{
+    //    None,
+    //    Normal,
+    //    Down
+    //}
+    // 自分のID
+    private int m_id;
+
+    // 敵マネージャ
+    [SerializeField] GameObject m_enemyManager;
 
     // 敵が通るための道
     [SerializeField] GameObject m_moveEnemyRoad;
@@ -35,6 +38,7 @@ public class EnemyMove : MonoBehaviour
 
     // 現在動いていいかのフラグ
     [SerializeField]bool m_moveFlag = true;
+    private bool m_moveFlagBefore = true;
 
     // Start is called before the first frame update
     void Start()
@@ -52,6 +56,23 @@ public class EnemyMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(m_moveFlag != m_moveFlagBefore)
+        {
+            // ダウンから復活した場合敵全体にも復活したと伝えるようにする
+            if(!m_moveFlagBefore)
+            {
+                m_enemyManager.GetComponent<EnemyManager>().UpdateGraspEnemyState(m_id, true);
+                m_enemyManager.GetComponent<EnemyManager>().UpdateActuallyEnemyState(m_id, true);
+            }
+            else if(m_moveFlagBefore)
+            {
+                // 実際の敵の状態を渡す(敵たち自体は倒れている敵を見ないと把握できない)
+                m_enemyManager.GetComponent<EnemyManager>().UpdateActuallyEnemyState(m_id, true);
+            }
+
+            m_moveFlagBefore = m_moveFlag;
+        }
+
         // moveFlagがfalseなら動いてはいけないのでreturnする
         if (!m_moveFlag) return;
 
@@ -134,15 +155,14 @@ public class EnemyMove : MonoBehaviour
         m_moveFlag = moveFlag;
     }
 
-    // 現在ステートのゲッタ
-    public int GetState()
+    // idのゲッタ
+    public int GetId()
     {
-        return m_state;
+        return m_id;
     }
-
-    // 現在ステートのセッタ
-    public void SetState(int state)
+    // idのセッタ
+    public void SetId(int id)
     {
-        m_state = state;
+        m_id = id;
     }
 }
