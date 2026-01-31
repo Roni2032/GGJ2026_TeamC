@@ -5,8 +5,6 @@ using UnityEngine.SceneManagement;
 
 public class ClearArea : MonoBehaviour
 {
-    [SerializeField]
-    Fade fade;
     // Start is called before the first frame update
     void Start()
     {
@@ -16,10 +14,7 @@ public class ClearArea : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (fade.IsActive && fade.IsFinished)
-        {
-            SceneManager.LoadScene("ResultScene");
-        }
+        
     }
     public void OnTriggerEnter(Collider other)
     {
@@ -31,9 +26,7 @@ public class ClearArea : MonoBehaviour
             //ここで盗んだものを持っているか判別
             if (true)
             {
-                Debug.Log("クリア！！");
-                GameManager.Instance.ResultType = ResultType.Clear;
-                fade.StartFade();
+                GameManager.Instance.GameClear();
             }
             else
             {

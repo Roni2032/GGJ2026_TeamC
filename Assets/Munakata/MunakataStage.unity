@@ -441,8 +441,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0.000015259}
-  m_SizeDelta: {x: 1026, y: 498}
+  m_AnchoredPosition: {x: -8.9114, y: 0.0000085831}
+  m_SizeDelta: {x: 1937.8228, y: 1080}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &231044802
 MonoBehaviour:
@@ -763,7 +763,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6652bbc873353c74fab47d8f8a9e5cc4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fade: {fileID: 231044802}
 --- !u!33 &527360619
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -2646,6 +2645,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8596489efb2ff2946bfc2fc4b574afc7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  KnockoutParam:
+    radius: 0
+    mask:
+      serializedVersion: 2
+      m_Bits: 0
   _moveSpeed: 5
 --- !u!54 &1509527474
 Rigidbody:
@@ -2774,6 +2778,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1ee5084f020c324685105103c271dad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fade: {fileID: 231044802}
 --- !u!4 &1570379763
 Transform:
   m_ObjectHideFlags: 0
