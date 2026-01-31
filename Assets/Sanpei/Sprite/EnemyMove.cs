@@ -24,7 +24,7 @@ public class EnemyMove : MonoBehaviour
     bool m_isPhaseMoving = true;
 
     // 現在動いていいかのフラグ
-    bool m_moveFlag = true;
+    [SerializeField]bool m_moveFlag = true;
 
     // Start is called before the first frame update
     void Start()
@@ -62,10 +62,13 @@ public class EnemyMove : MonoBehaviour
         m_pos = (m_pos + (directionVec * m_speed) * m_delta);
         transform.position = m_pos;
 
+        // 回転処理
+        transform.rotation = Quaternion.LookRotation(moveVec);
+
         // 移動後目標位置までついたとみなしたら次の目標に移行する
         moveVec = targetPos - m_pos;
 
-        Debug.Log("現在の目標までの位置：" + moveVec.magnitude);
+        //Debug.Log("現在の目標までの位置：" + moveVec.magnitude);
         // 最後の目標位置まで到着した場合は進んだ道を逆走する
         if (moveVec.magnitude <= 0.3f)
         {
@@ -87,6 +90,27 @@ public class EnemyMove : MonoBehaviour
                 m_movePhase--;
             }
         }
+    }
+
+    // Posの移動処理
+    private void movePos()
+    {
+        // デルタタイム取得
+        m_delta = Time.deltaTime;
+
+        // 進むための目標位置取得
+        Vector3 targetPos = m_moveEnemyPoints[m_movePhase].GetComponent<Transform>().position;
+
+        // 現在目標の方向に進む、進み終わったら次の目標に移行して進む
+
+        // 移動ベクトル計算
+        Vector3 moveVec = targetPos - m_pos;
+        // 方向ベクトル取得
+        Vector3 directionVec = moveVec.normalized;
+
+        // 移動処理
+        m_pos = (m_pos + (directionVec * m_speed) * m_delta);
+        transform.position = m_pos;
     }
 
     // 動いていいかのゲッタ
