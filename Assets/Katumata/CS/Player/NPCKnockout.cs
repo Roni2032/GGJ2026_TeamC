@@ -1,6 +1,9 @@
+#define SkinnedMeshRenderer
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using NUnit.Framework.Internal;
+
 
 #if UNITY_EDITOR
 using System.Collections;
@@ -41,11 +44,16 @@ public class NPCKnockout
     [Tooltip("現在気絶中のNPC")]
     private EnemyMove _currentKnockoutEnemy = null;
 
+#if SkinnedMeshRenderer
+    [Tooltip("変装前のSkinnedMeshRenderer")]
+    private SkinnedMeshRenderer _originalSkinnedMeshRenderer = null;
+#else
     [Tooltip("変装前のMeshFilter")]
     private MeshFilter _originalMeshFilter = null;
 
     [Tooltip("変装前のMeshRenderer")]
     private MeshRenderer _originalMeshRenderer = null;
+#endif
 
     [Tooltip("サウンドマネージャー")]
     private SoundManager soundManager;
@@ -61,9 +69,14 @@ public class NPCKnockout
 
         // RequireComponent
         {
+#if SkinnedMeshRenderer
+            // 変装前の見た目を保持
+            _originalSkinnedMeshRenderer = playerCtrl.gameObject.GetComponent<SkinnedMeshRenderer>();
+#else
             // 変装前の見た目を保持
             _originalMeshFilter = playerCtrl.gameObject.GetComponent<MeshFilter>();
             _originalMeshRenderer = playerCtrl.gameObject.GetComponent<MeshRenderer>();
+#endif
         }
     }
 
@@ -119,6 +132,12 @@ public class NPCKnockout
 
             // 気絶させた警備員に変装する
             {
+#if SkinnedMeshRenderer
+                if (_currentKnockoutEnemy.gameObject.TryGetComponent(out SkinnedMeshRenderer smr) != true)
+                {
+                    Debug.LogError("対象にSkinnedMeshRendererがアタッチされていません！");
+                }
+#else
                 if (_currentKnockoutEnemy.gameObject.TryGetComponent(out MeshFilter meshFilter) != true)
                 {
                     Debug.LogError("対象にMeshFilterがアタッチされていません！");
@@ -127,9 +146,15 @@ public class NPCKnockout
                 {
                     Debug.LogError("対象にMeshRendererがアタッチされていません！");
                 }
+#endif
 
+#if SkinnedMeshRenderer
+                // 変装
+                _playerCtrl.Disguise(smr.sharedMesh, smr.material, _currentKnockoutEnemy);
+#else
                 // 変装
                 _playerCtrl.Disguise(meshFilter.mesh, meshRenderer.material, _currentKnockoutEnemy);
+#endif
             }
         }
     }
