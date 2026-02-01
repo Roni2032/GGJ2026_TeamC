@@ -54,7 +54,7 @@ public class PlayerCtrl : MonoBehaviour
     private bool _isDisguise = false;
 
     [Tooltip("現在いる範囲")]
-    private PatorlArea _currentPatorlArea = null;
+    private PatrolArea _currentPatorlArea = null;
 
     [SerializeField, Header("NPCKnockout用パラメータ")]
     private KnockoutParam KnockoutParam = new KnockoutParam();
@@ -80,7 +80,7 @@ public class PlayerCtrl : MonoBehaviour
     /// <summary>
     /// 現在いる範囲
     /// </summary>
-    public PatorlArea CurrentArea
+    public PatrolArea CurrentArea
     {
         get => _currentPatorlArea;
         set

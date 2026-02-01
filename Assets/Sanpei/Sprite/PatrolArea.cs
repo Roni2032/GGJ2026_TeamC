@@ -22,7 +22,7 @@ public class PatrolArea : MonoBehaviour
         // “–‚½‚Á‚Ä‚¢‚½‚Ì‚ªPlayer‚È‚ç‚»‚ê‚É‘Î‚µ‚Ä‚ ‚È‚½‚Í‚±‚ÌƒGƒŠƒA‚É‹‚Ü‚·‚æ‚Æ“`‚¦‚é
         if (other.gameObject.TryGetComponent(out PlayerCtrl playerCtrl))
         {
-            //playerCtrl.CurrentArea = this;
+            playerCtrl.CurrentArea = this;
         }
 
     }
