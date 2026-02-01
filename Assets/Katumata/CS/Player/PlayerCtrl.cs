@@ -65,9 +65,6 @@ public class PlayerCtrl : MonoBehaviour
     [SerializeField, Header("移動速度")]
     private float _moveSpeed = 0.0f;
 
-    [SerializeField, Header("サウンドマネージャー")]
-    private SoundManager soundManager;
-
     /// <summary>
     /// 現在変装中の警備員のID
     /// </summary>
