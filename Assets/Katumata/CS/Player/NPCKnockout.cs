@@ -135,7 +135,11 @@ public class NPCKnockout
 #if SkinnedMeshRenderer
                 if (_currentKnockoutEnemy.gameObject.TryGetComponent(out SkinnedMeshRenderer smr) != true)
                 {
-                    Debug.LogError("対象にSkinnedMeshRendererがアタッチされていません！");
+                    smr = _currentKnockoutEnemy.GetComponentInChildren<SkinnedMeshRenderer>(false);
+                    if (smr == null)
+                    {
+                        Debug.LogError("対象にSkinnedMeshRendererがアタッチされていません！");
+                    }
                 }
 #else
                 if (_currentKnockoutEnemy.gameObject.TryGetComponent(out MeshFilter meshFilter) != true)
