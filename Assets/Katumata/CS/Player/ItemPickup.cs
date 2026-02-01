@@ -9,52 +9,52 @@ using static UnityEngine.EventSystems.EventTrigger;
 #endif
 
 /// <summary>
-/// ItemPickup—pƒpƒ‰ƒ[ƒ^
+/// ItemPickupç”¨ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
 /// </summary>
 [Serializable]
 public struct ItemPickupParam
 {
-    [Header("ƒsƒbƒNƒAƒbƒv”ÍˆÍ")]
+    [Header("ãƒ”ãƒƒã‚¯ã‚¢ãƒƒãƒ—ç¯„å›²")]
     public float radius;
 
-    [Header("ƒsƒbƒNƒAƒbƒv‘ÎÛ‚ÌLayer")]
-    public LayerMask mask;     // PL‚Æ’nŒ`‚ğ‘ÎÛŠO‚É‚·‚é
+    [Header("ãƒ”ãƒƒã‚¯ã‚¢ãƒƒãƒ—å¯¾è±¡ã®Layer")]
+    public LayerMask mask;     // PLã¨åœ°å½¢ã‚’å¯¾è±¡å¤–ã«ã™ã‚‹
 
-    [Header("ƒTƒEƒ“ƒhƒ}ƒl[ƒWƒƒ[")]
+    [Header("ã‚µã‚¦ãƒ³ãƒ‰ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼")]
     public SoundManager soundManager;
 
-    [Header("æ“¾‚ÌƒIƒtƒZƒbƒg")]
+    [Header("å–å¾—æ™‚ã®ã‚ªãƒ•ã‚»ãƒƒãƒˆ")]
     public Transform pickupOffset;
 }
 
 /// <summary>
-/// ƒAƒCƒeƒ€‚ğE‚¤
+/// ã‚¢ã‚¤ãƒ†ãƒ ã‚’æ‹¾ã†
 /// </summary>
 public class ItemPickup
 {
-    [Tooltip("ƒsƒbƒNƒAƒbƒv”ÍˆÍ")]
+    [Tooltip("ãƒ”ãƒƒã‚¯ã‚¢ãƒƒãƒ—ç¯„å›²")]
     private float _radius = 0.0f;
 
-    [Tooltip("ƒsƒbƒNƒAƒbƒv‘ÎÛ‚ÌLayer")]
-    private LayerMask _mask = 0;     // PL‚Æ’nŒ`‚ğ‘ÎÛŠO‚É‚·‚é
+    [Tooltip("ãƒ”ãƒƒã‚¯ã‚¢ãƒƒãƒ—å¯¾è±¡ã®Layer")]
+    private LayerMask _mask = 0;     // PLã¨åœ°å½¢ã‚’å¯¾è±¡å¤–ã«ã™ã‚‹
 
-    [Tooltip("ƒsƒbƒNƒAƒbƒv‚ğÀs‚·‚éPL")]
+    [Tooltip("ãƒ”ãƒƒã‚¯ã‚¢ãƒƒãƒ—ã‚’å®Ÿè¡Œã™ã‚‹PL")]
     private PlayerCtrl _playerCtrl = null;
 
-    [Tooltip("ƒTƒEƒ“ƒhƒ}ƒl[ƒWƒƒ[")]
+    [Tooltip("ã‚µã‚¦ãƒ³ãƒ‰ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼")]
     private SoundManager soundManager;
 
-    [Tooltip("Š’†‚ÌƒAƒCƒeƒ€")]
+    [Tooltip("æ‰€æŒä¸­ã®ã‚¢ã‚¤ãƒ†ãƒ ")]
     private GameObject _pickupItemObj = null;
 
-    [Tooltip("•óÎ‚ğE‚Á‚½‚©")]
+    [Tooltip("å®çŸ³ã‚’æ‹¾ã£ãŸã‹")]
     private bool _isGemPickup = false;
 
-    [Header("æ“¾‚ÌƒIƒtƒZƒbƒg")]
+    [Header("å–å¾—æ™‚ã®ã‚ªãƒ•ã‚»ãƒƒãƒˆ")]
     private Transform _pickupOffset = null;
 
     /// <summary>
-    /// •óÎ‚ğE‚Á‚½‚©
+    /// å®çŸ³ã‚’æ‹¾ã£ãŸã‹
     /// </summary>
     public bool IsGemPickup => _isGemPickup;
 
@@ -70,19 +70,20 @@ public class ItemPickup
     }
 
     /// <summary>
-    /// E‚¤B<br/>
-    /// PL‚ÌInputSystem‚ÉŠ„‚è“–‚Ä‚é
+    /// æ‹¾ã†ã€‚<br/>
+    /// PLã®InputSystemã«å‰²ã‚Šå½“ã¦ã‚‹
     /// </summary>
     /// <param name="context"></param>
     public void Pickup(InputAction.CallbackContext context)
     {
+        Debug.Log("æ‹¾ãŠã†ã‹ãªï¼Ÿ");
         const string GEM_TAG = "Gem";
 
         Collider[] others = Physics.OverlapSphere(
             _playerCtrl.transform.position,
             _radius,
             _mask,
-            QueryTriggerInteraction.Ignore // Trigger‚àE‚¤‚È‚ç Collide
+            QueryTriggerInteraction.Ignore // Triggerã‚‚æ‹¾ã†ãªã‚‰ Collide
         );
 
         Vector3 origin = _playerCtrl.transform.position;
@@ -90,7 +91,7 @@ public class ItemPickup
         GameObject nearestItem = null;
         float bestSqrDist = float.PositiveInfinity;
 
-        // ”ÍˆÍ“à‚ÉƒsƒbƒNƒAƒbƒv‘ÎÛ‚ª‚ ‚é‚©’Tõ
+        // ç¯„å›²å†…ã«ãƒ”ãƒƒã‚¯ã‚¢ãƒƒãƒ—å¯¾è±¡ãŒã‚ã‚‹ã‹æ¢ç´¢
         foreach (var col in others)
         {
             GameObject obj = col.gameObject;
@@ -106,14 +107,15 @@ public class ItemPickup
             }
         }
 
-        // nearest ‚ªˆê”Ô‹ß‚¢‘ÎÛiŒ©‚Â‚©‚ç‚È‚¯‚ê‚Î nullj
+        // nearest ãŒä¸€ç•ªè¿‘ã„å¯¾è±¡ï¼ˆè¦‹ã¤ã‹ã‚‰ãªã‘ã‚Œã° nullï¼‰
         if (nearestItem != null)
         {
-            // ˆê”Ô‹ß‚¢ƒAƒCƒeƒ€‚ğE‚¤
+            // ä¸€ç•ªè¿‘ã„ã‚¢ã‚¤ãƒ†ãƒ ã‚’æ‹¾ã†
             _pickupItemObj = nearestItem;
             _pickupItemObj.transform.parent = _pickupOffset.transform;
             _pickupItemObj.transform.localPosition = Vector3.zero;
             _playerCtrl.OnPickupAnim();
+            _isGemPickup = true;
         }
     }
 }

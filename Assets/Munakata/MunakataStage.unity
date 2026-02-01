@@ -202,6 +202,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: ac23a4e39b371894aaa62c02fd5b5b61, type: 3}
   m_PrefabInstance: {fileID: 20287457}
   m_PrefabAsset: {fileID: 0}
+--- !u!137 &43470593 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -540341484401439474, guid: 49bd25583429eb84e81d7c3bada51cbf, type: 3}
+  m_PrefabInstance: {fileID: 1947105400}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &160472316
 GameObject:
   m_ObjectHideFlags: 0
@@ -429,14 +434,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8596489efb2ff2946bfc2fc4b574afc7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  KnockoutParam:
+  _knockoutParam:
+    radius: 0
+    mask:
+      serializedVersion: 2
+      m_Bits: 0
+    soundManager: {fileID: 0}
+  _itemPickupParam:
     radius: 0
     mask:
       serializedVersion: 2
       m_Bits: 0
     soundManager: {fileID: 352640154}
+    pickupOffset: {fileID: 0}
   _moveSpeed: 5
-  soundManager: {fileID: 352640154}
+  _turnSpeed: 0.1
+  _soundManager: {fileID: 352640154}
+  _skinnedMeshRenderer: {fileID: 43470593}
 --- !u!23 &229203507
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -3840,6 +3854,10 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 01b4cd7cd4bcd4c4b99e31902bef18a2, type: 2}
+    - target: {fileID: 5866666021909216657, guid: 49bd25583429eb84e81d7c3bada51cbf, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
