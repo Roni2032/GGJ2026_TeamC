@@ -5,12 +5,15 @@ using UnityEngine;
 
 public class EnemyMove : MonoBehaviour
 {
-    //enum ENEMYSTATE
-    //{
-    //    None,
-    //    Normal,
-    //    Down
-    //}
+    enum ENEMYSTATE
+    {
+        None,
+        Walk,
+        Rotation
+    }
+    // 現在のステート
+    private ENEMYSTATE m_currentState = ENEMYSTATE.Rotation;
+
     // 自分のID
     private int m_id;
 
@@ -61,13 +64,13 @@ public class EnemyMove : MonoBehaviour
             // ダウンから復活した場合敵全体にも復活したと伝えるようにする
             if(!m_moveFlagBefore)
             {
-                m_enemyManager.GetComponent<EnemyManager>().UpdateGraspEnemyState(m_id, true);
-                m_enemyManager.GetComponent<EnemyManager>().UpdateActuallyEnemyState(m_id, true);
+                m_enemyManager.GetComponent<EnemyManager>().UpdateGraspEnemyMove(m_id, true);
+                m_enemyManager.GetComponent<EnemyManager>().UpdateActuallyEnemyMove(m_id, true);
             }
             else if(m_moveFlagBefore)
             {
                 // 実際の敵の状態を渡す(敵たち自体は倒れている敵を見ないと把握できない)
-                m_enemyManager.GetComponent<EnemyManager>().UpdateActuallyEnemyState(m_id, true);
+                m_enemyManager.GetComponent<EnemyManager>().UpdateActuallyEnemyMove(m_id, true);
             }
 
             m_moveFlagBefore = m_moveFlag;
@@ -89,12 +92,31 @@ public class EnemyMove : MonoBehaviour
         // 方向ベクトル取得
         Vector3 directionVec = moveVec.normalized;
 
-        // 移動処理
-        m_pos = (m_pos + (directionVec * m_speed) * m_delta);
-        transform.position = m_pos;
+        // 現在ステートによって歩くか回転して軸合わせをするか決める
+        if(m_currentState == ENEMYSTATE.Walk)
+        {
+            // 移動処理
+            m_pos = (m_pos + (directionVec * m_speed) * m_delta);
+            transform.position = m_pos;
+        }
+        else if(m_currentState == ENEMYSTATE.Rotation)
+        {
+            // 回転処理
+            Quaternion rot = transform.rotation;
+            Quaternion targetRot = Quaternion.LookRotation(moveVec);
+            Debug.Log(targetRot);
+            rot = Quaternion.Lerp(rot, targetRot, 0.25f);
+            transform.rotation = rot;
 
-        // 回転処理
-        transform.rotation = Quaternion.LookRotation(moveVec);
+            float disAngle = Quaternion.Angle(rot, targetRot);
+            // ある程度目標地点まで回転できたとみなせるなら歩きステートに変更する
+            if(disAngle <= 1.0f)
+            {
+                // ステート変更
+                transform.rotation = targetRot;
+                m_currentState = ENEMYSTATE.Walk;
+            }
+        }
 
         // 移動後目標位置までついたとみなしたら次の目標に移行する
         moveVec = targetPos - m_pos;
@@ -103,6 +125,9 @@ public class EnemyMove : MonoBehaviour
         // 最後の目標位置まで到着した場合は進んだ道を逆走する
         if (moveVec.magnitude <= 0.3f)
         {
+            // ステート変更
+            m_currentState = ENEMYSTATE.Rotation;
+
             if (m_movePhase == m_movePhaseMax-1)
             {
                 m_isPhaseMoving = false;
