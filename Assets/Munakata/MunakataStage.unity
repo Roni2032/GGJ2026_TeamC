@@ -3833,6 +3833,10 @@ PrefabInstance:
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: 49bd25583429eb84e81d7c3bada51cbf, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: 49bd25583429eb84e81d7c3bada51cbf, type: 3}
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 01b4cd7cd4bcd4c4b99e31902bef18a2, type: 2}
