@@ -50,6 +50,9 @@ public class PlayerCtrl : MonoBehaviour
     [Tooltip("Œ»İ•Ï‘•’†‚ÌŒx”õˆõ‚ÌTag")]
     private string _currentDisguiseTag = string.Empty;
 
+    [Tooltip("Œ»İ•Ï‘•’†‚ÌŒx”õˆõ‚ÌŒx”õƒGƒŠƒA")]
+    private PatrolArea _currentDisguisePatorloArea = null;
+
     [Tooltip("•Ï‘•’†‚©")]
     private bool _isDisguise = false;
 
@@ -71,6 +74,11 @@ public class PlayerCtrl : MonoBehaviour
     /// Œ»İ•Ï‘•’†‚ÌŒx”õˆõ‚ÌTag
     /// </summary>
     public string CurrentDisguiseTag => _currentDisguiseTag;
+
+    /// <summary>
+    /// Œ»İ•Ï‘•’†‚ÌŒx”õˆõ‚ÌŒx”õƒGƒŠƒA
+    /// </summary>
+    public PatrolArea CurrentDisguisePatorloArea => _currentDisguisePatorloArea;
 
     /// <summary>
     /// •Ï‘•’†‚©
@@ -236,6 +244,7 @@ public class PlayerCtrl : MonoBehaviour
         // Œ»İ•Ï‘•’†‚ÌŒx”õˆõ‚ÆTag‚ğæ“¾
         _currentDisguiseEnemy = enemy;
         _currentDisguiseTag = enemy.gameObject.tag;
+        _currentDisguisePatorloArea = enemy.GetMyArea();
 
         _isDisguise = false;
     }
