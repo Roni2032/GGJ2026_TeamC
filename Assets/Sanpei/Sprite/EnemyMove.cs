@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditorInternal;
@@ -26,6 +27,9 @@ public class EnemyMove : MonoBehaviour
     [SerializeField] GameObject m_moveEnemyRoad;
     private GameObject[] m_moveEnemyPoints;
     private GameObject m_targetObj;
+
+    // アニメーター
+    Animator m_animator;
 
     // 現在の位置
     private Vector3 m_pos;
@@ -56,6 +60,9 @@ public class EnemyMove : MonoBehaviour
         m_movePhaseMax = m_moveEnemyPoints.Length;
         // 進むための目標を初期化
         m_targetObj = m_moveEnemyPoints[m_movePhase];
+
+        // アニメーター取得
+        m_animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -66,11 +73,14 @@ public class EnemyMove : MonoBehaviour
             // ダウンから復活した場合敵全体にも復活したと伝えるようにする
             if(!m_moveFlagBefore)
             {
+                m_animator.SetBool("isMove", true);
                 m_enemyManager.GetComponent<EnemyManager>().UpdateGraspEnemyMove(m_id, true);
                 m_enemyManager.GetComponent<EnemyManager>().UpdateActuallyEnemyMove(m_id, true);
             }
             else if(m_moveFlagBefore)
             {
+                m_animator.SetBool("isMove", false);
+
                 // 実際の敵の状態を渡す(敵たち自体は倒れている敵を見ないと把握できない)
                 m_enemyManager.GetComponent<EnemyManager>().UpdateActuallyEnemyMove(m_id, true);
             }
@@ -91,6 +101,8 @@ public class EnemyMove : MonoBehaviour
 
         // 移動ベクトル計算
         Vector3 moveVec = targetPos - m_pos;
+        // yの移動ベクトルは消す
+        moveVec.y = 0;
         // 方向ベクトル取得
         Vector3 directionVec = moveVec.normalized;
 
@@ -125,7 +137,8 @@ public class EnemyMove : MonoBehaviour
 
         //Debug.Log("現在の目標までの位置：" + moveVec.magnitude);
         // 最後の目標位置まで到着した場合は進んだ道を逆走する
-        if (moveVec.magnitude <= 0.3f)
+        float originalMagnitude = (float)Math.Sqrt(moveVec.x * moveVec.x + moveVec.z * moveVec.z);
+        if (originalMagnitude <= 0.3f)
         {
             // ステート変更
             m_currentState = ENEMYSTATE.Rotation;
