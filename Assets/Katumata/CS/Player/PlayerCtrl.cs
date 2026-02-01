@@ -8,6 +8,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.Windows;
 
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(Animator))]
 
 #if SkinnedMeshRenderer
 
@@ -67,6 +68,9 @@ public class PlayerCtrl : MonoBehaviour
 
     [Tooltip("現在いる範囲")]
     private PatrolArea _currentPatorlArea = null;
+
+    [Tooltip("アニメ－ション")]
+    private Animator _anim = null;
 
     [SerializeField, Header("NPCKnockout用パラメータ")]
     private KnockoutParam _knockoutParam = new KnockoutParam();
@@ -144,8 +148,7 @@ public class PlayerCtrl : MonoBehaviour
 
         // RequireComponent
         _rigidbody = GetComponent<Rigidbody>();
-        _meshFilter = GetComponent<MeshFilter>();
-        _meshRenderer = GetComponent<MeshRenderer>();
+        _anim = GetComponent<Animator>();
 
 #if SkinnedMeshRenderer
         // 変装前の見た目を保持
@@ -153,6 +156,9 @@ public class PlayerCtrl : MonoBehaviour
         _originalMat = _skinnedMeshRenderer.material;
 
 #else
+        _meshFilter = GetComponent<MeshFilter>();
+        _meshRenderer = GetComponent<MeshRenderer>();
+
         // 変装前の見た目を保持
         _originalMesh = _meshFilter.mesh;
         _originalMat = _meshRenderer.material;
@@ -256,6 +262,10 @@ public class PlayerCtrl : MonoBehaviour
             Vector3 deltaV = targetHoriz - horiz;
             _rigidbody.AddForce(deltaV, ForceMode.VelocityChange);
 
+            // 移動アニメーション
+            float moveAmount = Mathf.Clamp01(moveDir.magnitude);
+            OnMoveAnim(moveAmount);
+
 
 
             // 回転
@@ -324,5 +334,22 @@ public class PlayerCtrl : MonoBehaviour
 #endif
 
         _isDisguise = false;
+    }
+
+    public void OnKnockoutAnim() => _anim.SetBool("IsStrik", true);    // 気絶
+    //public void OffKnockoutAnim() => _anim.SetBool("IsStrik", false);
+    public void OnPickupAnim() => _anim.SetBool("IsSteel", true);    // 拾う
+    //public void OffPickupAnim() => _anim.SetBool("IsSteel", false);
+    private void OnIdleAnim() => _anim.SetBool("Idle", true);        // アイドリング
+    private void OffIdleAnim() => _anim.SetBool("Idle", false);
+    private void OnMoveAnim(float currentSpeed)
+    {
+        if (Mathf.Approximately(currentSpeed, 0.0f))
+        {
+            OnIdleAnim();
+            return;
+        }
+        OffIdleAnim();
+        _anim.SetFloat("Move", currentSpeed);          // 移動
     }
 }

@@ -113,6 +113,7 @@ public class ItemPickup
             _pickupItemObj = nearestItem;
             _pickupItemObj.transform.parent = _pickupOffset.transform;
             _pickupItemObj.transform.localPosition = Vector3.zero;
+            _playerCtrl.OnPickupAnim();
         }
     }
 }

@@ -115,6 +115,7 @@ public class NPCKnockout
             //_currentKnockoutEnemy.‚È‚ñ‚½‚ç();
             _currentKnockoutEnemy.SetMoveFlag(false);
             soundManager.OnStrike();
+            _playerCtrl.OnKnockoutAnim();
 
             // ‹Câ‚³‚¹‚½Œx”õˆõ‚É•Ï‘•‚·‚é
             {
