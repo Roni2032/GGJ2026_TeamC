@@ -64,13 +64,13 @@ public class EnemyMove : MonoBehaviour
             // ƒ_ƒEƒ“‚©‚ç•œŠˆ‚µ‚½ê‡“G‘S‘Ì‚É‚à•œŠˆ‚µ‚½‚Æ“`‚¦‚é‚æ‚¤‚É‚·‚é
             if(!m_moveFlagBefore)
             {
-                m_enemyManager.GetComponent<EnemyManager>().UpdateGraspEnemyState(m_id, true);
-                m_enemyManager.GetComponent<EnemyManager>().UpdateActuallyEnemyState(m_id, true);
+                m_enemyManager.GetComponent<EnemyManager>().UpdateGraspEnemyMove(m_id, true);
+                m_enemyManager.GetComponent<EnemyManager>().UpdateActuallyEnemyMove(m_id, true);
             }
             else if(m_moveFlagBefore)
             {
                 // ÀÛ‚Ì“G‚Ìó‘Ô‚ğ“n‚·(“G‚½‚¿©‘Ì‚Í“|‚ê‚Ä‚¢‚é“G‚ğŒ©‚È‚¢‚Æ”cˆ¬‚Å‚«‚È‚¢)
-                m_enemyManager.GetComponent<EnemyManager>().UpdateActuallyEnemyState(m_id, true);
+                m_enemyManager.GetComponent<EnemyManager>().UpdateActuallyEnemyMove(m_id, true);
             }
 
             m_moveFlagBefore = m_moveFlag;
