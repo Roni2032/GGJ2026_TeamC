@@ -9,6 +9,7 @@ using UnityEngine.Windows;
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
 [RequireComponent(typeof(NPCKnockout))]
+[RequireComponent(typeof(ItemPickup))]
 public class PlayerCtrl : MonoBehaviour
 {
     [Tooltip("PL入力のInputSystem")]
@@ -41,6 +42,9 @@ public class PlayerCtrl : MonoBehaviour
     [Tooltip("範囲内のNPCを気絶させる")]
     private NPCKnockout _npcKnockout = null;
 
+    [Tooltip("アイテムを拾う")]
+    private ItemPickup _itemPickup = null;
+
     [Tooltip("使用中のカメラ")]
     private Camera _cam = null;
 
@@ -60,7 +64,10 @@ public class PlayerCtrl : MonoBehaviour
     private PatrolArea _currentPatorlArea = null;
 
     [SerializeField, Header("NPCKnockout用パラメータ")]
-    private KnockoutParam KnockoutParam = new KnockoutParam();
+    private KnockoutParam _knockoutParam = new KnockoutParam();
+
+    [SerializeField, Header("ItemPickup用パラメータ")]
+    private ItemPickupParam _itemPickupParam = new ItemPickupParam();
 
     [SerializeField, Header("移動速度")]
     private float _moveSpeed = 0.0f;
@@ -89,6 +96,11 @@ public class PlayerCtrl : MonoBehaviour
     public bool IsDisguise => _isDisguise;
 
     /// <summary>
+    /// 宝石を拾ったか
+    /// </summary>
+    public bool IsGemPickup => _itemPickup.IsGemPickup;
+
+    /// <summary>
     /// 現在いる範囲
     /// </summary>
     public PatrolArea CurrentArea
@@ -111,7 +123,8 @@ public class PlayerCtrl : MonoBehaviour
     private void Awake()
     {
         // 初期インスタンス作成
-        _npcKnockout = new NPCKnockout(this, KnockoutParam);
+        _npcKnockout = new NPCKnockout(this, _knockoutParam);
+        _itemPickup = new ItemPickup(this, _itemPickupParam);
 
         // PlayerControlsの初期設定
         InputSystemInitSetting();
@@ -160,6 +173,10 @@ public class PlayerCtrl : MonoBehaviour
             // Knockoutに割り当てる
             var knockout = _playerInput.Player.Knockout;
             knockout.started += _npcKnockout.Knockout;
+
+            // ItemPickupに割り当てる
+            var itemPickup = _playerInput.Player.ItemPickup;
+            itemPickup.started += _itemPickup.Pickup;
         }
     }
 
