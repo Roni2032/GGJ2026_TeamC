@@ -106,7 +106,7 @@ public class EnemyMove : MonoBehaviour
             // âÒì]èàóù
             Quaternion rot = transform.rotation;
             Quaternion targetRot = Quaternion.LookRotation(moveVec);
-            Debug.Log(targetRot);
+            //Debug.Log(targetRot);
             rot = Quaternion.Lerp(rot, targetRot, 0.25f);
             transform.rotation = rot;
 
