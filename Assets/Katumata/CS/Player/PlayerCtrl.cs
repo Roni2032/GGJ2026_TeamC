@@ -67,6 +67,7 @@ public class PlayerCtrl : MonoBehaviour
 
     [SerializeField, Header("サウンドマネージャー")]
     private SoundManager soundManager;
+
     /// <summary>
     /// 現在変装中の警備員のID
     /// </summary>
