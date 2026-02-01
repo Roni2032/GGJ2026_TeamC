@@ -11,82 +11,84 @@ using UnityEngine.Windows;
 [RequireComponent(typeof(NPCKnockout))]
 public class PlayerCtrl : MonoBehaviour
 {
-    [Tooltip("PLå…¥åŠ›ã®InputSystem")]
+    [Tooltip("PL“ü—Í‚ÌInputSystem")]
     private PlayerControls _playerInput = null;
 
-    [Tooltip("æ°´å¹³å…¥åŠ›")]
+    [Tooltip("…•½“ü—Í")]
     private float _horizontalValue = 0.0f;
 
-    [Tooltip("å‚ç›´å…¥åŠ›")]
+    [Tooltip("‚’¼“ü—Í")]
     private float _verticalValue = 0.0f;
 
-    [Tooltip("å…¥åŠ›æ–¹å‘")]
+    [Tooltip("“ü—Í•ûŒü")]
     private Vector3 _inputDirection = Vector3.zero;
 
-    [Tooltip("è‡ªèº«ã®Rigidbody")]
+    [Tooltip("©g‚ÌRigidbody")]
     private Rigidbody _rigidbody = null;
 
-    [Tooltip("è‡ªèº«ã®MeshFilter")]
+    [Tooltip("©g‚ÌMeshFilter")]
     private MeshFilter _meshFilter = null;
 
-    [Tooltip("è‡ªèº«ã®MeshRenderer")]
+    [Tooltip("©g‚ÌMeshRenderer")]
     private MeshRenderer _meshRenderer = null;
 
-    [Tooltip("å¤‰è£…å‰ã®Mesh")]
+    [Tooltip("•Ï‘•‘O‚ÌMesh")]
     private Mesh _originalMesh = null;
 
-    [Tooltip("å¤‰è£…å‰ã®Mat")]
+    [Tooltip("•Ï‘•‘O‚ÌMat")]
     private Material _originalMat = null;
 
-    [Tooltip("ç¯„å›²å†…ã®NPCã‚’æ°—çµ¶ã•ã›ã‚‹")]
+    [Tooltip("”ÍˆÍ“à‚ÌNPC‚ğ‹Câ‚³‚¹‚é")]
     private NPCKnockout _npcKnockout = null;
 
-    [Tooltip("ä½¿ç”¨ä¸­ã®ã‚«ãƒ¡ãƒ©")]
+    [Tooltip("g—p’†‚ÌƒJƒƒ‰")]
     private Camera _cam = null;
 
-    [Tooltip("ç¾åœ¨å¤‰è£…ä¸­ã®è­¦å‚™å“¡")]
+    [Tooltip("Œ»İ•Ï‘•’†‚ÌŒx”õˆõ")]
     private EnemyMove _currentDisguiseEnemy = null;
 
-    [Tooltip("ç¾åœ¨å¤‰è£…ä¸­ã®è­¦å‚™å“¡ã®Tag")]
+    [Tooltip("Œ»İ•Ï‘•’†‚ÌŒx”õˆõ‚ÌTag")]
     private string _currentDisguiseTag = string.Empty;
 
-    [Tooltip("ç¾åœ¨å¤‰è£…ä¸­ã®è­¦å‚™å“¡ã®è­¦å‚™ã‚¨ãƒªã‚¢")]
+    [Tooltip("Œ»İ•Ï‘•’†‚ÌŒx”õˆõ‚ÌŒx”õƒGƒŠƒA")]
     private PatrolArea _currentDisguisePatorloArea = null;
 
-    [Tooltip("å¤‰è£…ä¸­ã‹")]
+    [Tooltip("•Ï‘•’†‚©")]
     private bool _isDisguise = false;
 
-    [Tooltip("ç¾åœ¨ã„ã‚‹ç¯„å›²")]
+    [Tooltip("Œ»İ‚¢‚é”ÍˆÍ")]
     private PatrolArea _currentPatorlArea = null;
 
-    [SerializeField, Header("NPCKnockoutç”¨ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿")]
+    [SerializeField, Header("NPCKnockout—pƒpƒ‰ƒ[ƒ^")]
     private KnockoutParam KnockoutParam = new KnockoutParam();
 
-    [SerializeField, Header("ç§»å‹•é€Ÿåº¦")]
+    [SerializeField, Header("ˆÚ“®‘¬“x")]
     private float _moveSpeed = 0.0f;
 
+    [SerializeField, Header("ƒTƒEƒ“ƒhƒ}ƒl[ƒWƒƒ[")]
+    private SoundManager soundManager;
     /// <summary>
-    /// ç¾åœ¨å¤‰è£…ä¸­ã®è­¦å‚™å“¡ã®ID
+    /// Œ»İ•Ï‘•’†‚ÌŒx”õˆõ‚ÌID
     /// </summary>
     public int CurrentDisguiseID => _currentDisguiseEnemy.GetId();
 
     /// <summary>
-    /// ç¾åœ¨å¤‰è£…ä¸­ã®è­¦å‚™å“¡ã®Tag
+    /// Œ»İ•Ï‘•’†‚ÌŒx”õˆõ‚ÌTag
     /// </summary>
     public string CurrentDisguiseTag => _currentDisguiseTag;
 
     /// <summary>
-    /// ç¾åœ¨å¤‰è£…ä¸­ã®è­¦å‚™å“¡ã®è­¦å‚™ã‚¨ãƒªã‚¢
+    /// Œ»İ•Ï‘•’†‚ÌŒx”õˆõ‚ÌŒx”õƒGƒŠƒA
     /// </summary>
     public PatrolArea CurrentDisguisePatorloArea => _currentDisguisePatorloArea;
 
     /// <summary>
-    /// å¤‰è£…ä¸­ã‹
+    /// •Ï‘•’†‚©
     /// </summary>
     public bool IsDisguise => _isDisguise;
 
     /// <summary>
-    /// ç¾åœ¨ã„ã‚‹ç¯„å›²
+    /// Œ»İ‚¢‚é”ÍˆÍ
     /// </summary>
     public PatrolArea CurrentArea
     {
@@ -97,7 +99,7 @@ public class PlayerCtrl : MonoBehaviour
             {
                 _currentPatorlArea = value;
 
-                // å€¤å¤‰åŒ–æ™‚ã®å‡¦ç†
+                // ’l•Ï‰»‚Ìˆ—
             }
         }
     }
@@ -107,10 +109,10 @@ public class PlayerCtrl : MonoBehaviour
     /// </summary>
     private void Awake()
     {
-        // åˆæœŸã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ä½œæˆ
+        // ‰ŠúƒCƒ“ƒXƒ^ƒ“ƒXì¬
         _npcKnockout = new NPCKnockout(this, KnockoutParam);
 
-        // PlayerControlsã®åˆæœŸè¨­å®š
+        // PlayerControls‚Ì‰Šúİ’è
         InputSystemInitSetting();
 
         // RequireComponent
@@ -118,50 +120,50 @@ public class PlayerCtrl : MonoBehaviour
         _meshFilter = GetComponent<MeshFilter>();
         _meshRenderer = GetComponent<MeshRenderer>();
 
-        // å¤‰è£…å‰ã®è¦‹ãŸç›®ã‚’ä¿æŒ
+        // •Ï‘•‘O‚ÌŒ©‚½–Ú‚ğ•Û
         _originalMesh = _meshFilter.mesh;
         _originalMat = _meshRenderer.material;
 
-        // ãƒ¡ã‚¤ãƒ³ã‚«ãƒ¡ãƒ©å–å¾—
+        // ƒƒCƒ“ƒJƒƒ‰æ“¾
         _cam = Camera.main;
     }
 
     private void OnDestroy()
     {
-        _playerInput.Disable();     // éæœ‰åŠ¹åŒ–
-        _playerInput.Dispose();     // ãƒªã‚½ãƒ¼ã‚¹è§£æ”¾
+        _playerInput.Disable();     // ”ñ—LŒø‰»
+        _playerInput.Dispose();     // ƒŠƒ\[ƒX‰ğ•ú
     }
 
     /// <summary>
-    /// PlayerControlsã®åˆæœŸè¨­å®š
+    /// PlayerControls‚Ì‰Šúİ’è
     /// </summary>
     private void InputSystemInitSetting()
     {
-        // PlayerControlsã‚’ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹åŒ–ã—ã€æœ‰åŠ¹ã«ã™ã‚‹
-        // ãƒªã‚½ãƒ¼ã‚¹è§£æ”¾ã®ç‚ºã«ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰å¤‰æ•°ã¨ã—ã¦ä¿æŒã™ã‚‹
+        // PlayerControls‚ğƒCƒ“ƒXƒ^ƒ“ƒX‰»‚µA—LŒø‚É‚·‚é
+        // ƒŠƒ\[ƒX‰ğ•ú‚Ìˆ×‚ÉƒtƒB[ƒ‹ƒh•Ï”‚Æ‚µ‚Ä•Û‚·‚é
         _playerInput = new PlayerControls();
         _playerInput.Enable();
 
-        // å‰²ã‚Šå½“ã¦
+        // Š„‚è“–‚Ä
         {
-            // Horizontalã«å‰²ã‚Šå½“ã¦ã‚‹
+            // Horizontal‚ÉŠ„‚è“–‚Ä‚é
             var horizontal = _playerInput.Player.Horizontal;
             horizontal.started += Horizontal;
             horizontal.canceled += Horizontal;
 
-            // Verticalã«å‰²ã‚Šå½“ã¦ã‚‹
+            // Vertical‚ÉŠ„‚è“–‚Ä‚é
             var vertical = _playerInput.Player.Vertical;
             vertical.started += Vertical;
             vertical.canceled += Vertical;
 
-            // Knockoutã«å‰²ã‚Šå½“ã¦ã‚‹
+            // Knockout‚ÉŠ„‚è“–‚Ä‚é
             var knockout = _playerInput.Player.Knockout;
             knockout.started += _npcKnockout.Knockout;
         }
     }
 
     /// <summary>
-    /// æ°´å¹³å…¥åŠ›ã®å‡¦ç†
+    /// …•½“ü—Í‚Ìˆ—
     /// </summary>
     /// <param name="context"></param>
     private void Horizontal(InputAction.CallbackContext context)
@@ -170,7 +172,7 @@ public class PlayerCtrl : MonoBehaviour
     }
 
     /// <summary>
-    /// å‚ç›´å…¥åŠ›ã®å‡¦ç†
+    /// ‚’¼“ü—Í‚Ìˆ—
     /// </summary>
     /// <param name="context"></param>
     private void Vertical(InputAction.CallbackContext context)
@@ -180,14 +182,14 @@ public class PlayerCtrl : MonoBehaviour
 
     void FixedUpdate()
     {
-        // ç§»å‹•ï¼ˆæœ¬å½“ãªã‚‰ã‚¹ãƒ¬ãƒƒãƒ‰ã‚’ä½œæˆã—ã€ç§»å‹•å…¥åŠ›ã‚’å—ã‘ä»˜ã‘ãªã„æ™‚ã¯Waitã•ã›ã‚‹æ–¹ãŒç¶ºéº—ãªã‚³ãƒ¼ãƒ‰ã«ãªã‚‹ï¼‰
+        // ˆÚ“®i–{“–‚È‚çƒXƒŒƒbƒh‚ğì¬‚µAˆÚ“®“ü—Í‚ğó‚¯•t‚¯‚È‚¢‚ÍWait‚³‚¹‚é•û‚ªãY—í‚ÈƒR[ƒh‚É‚È‚éj
         {
             Vector3 moveDir = _inputDirection;
 
-            // ã‚«ãƒ¡ãƒ©ãŒnullã§ãªã‘ã‚Œã°ã€ã‚«ãƒ¡ãƒ©ã®è§’åº¦ã‚’è€ƒæ…®ã™ã‚‹
+            // ƒJƒƒ‰‚ªnull‚Å‚È‚¯‚ê‚ÎAƒJƒƒ‰‚ÌŠp“x‚ğl—¶‚·‚é
             if (_cam != null)
             {
-                // ã‚«ãƒ¡ãƒ©åŸºæº–ã§ãƒ¯ãƒ¼ãƒ«ãƒ‰ç§»å‹•æ–¹å‘ã¸å¤‰æ›
+                // ƒJƒƒ‰Šî€‚Åƒ[ƒ‹ƒhˆÚ“®•ûŒü‚Ö•ÏŠ·
                 Vector3 camForward = _cam.transform.forward;
                 camForward.y = 0f;
                 camForward.Normalize();
@@ -196,30 +198,30 @@ public class PlayerCtrl : MonoBehaviour
                 camRight.y = 0f;
                 camRight.Normalize();
 
-                // ã‚«ãƒ¡ãƒ©åŸºæº–ã®ç§»å‹•æ–¹å‘ã‚’è¨ˆç®—
+                // ƒJƒƒ‰Šî€‚ÌˆÚ“®•ûŒü‚ğŒvZ
                 moveDir = camRight * _inputDirection.x + camForward * _inputDirection.z;
             }
 
             if (moveDir.sqrMagnitude > 1.0f)
             {
-                // æ­£è¦åŒ–
+                // ³‹K‰»
                 moveDir.Normalize();
             }
 
             Vector3 v = _rigidbody.velocity;
             Vector3 horiz = new Vector3(v.x, 0f, v.z);
 
-            // ä¸€å®šé€Ÿåº¦
+            // ˆê’è‘¬“x
             Vector3 targetHoriz = moveDir * _moveSpeed;
 
-            // å·®åˆ†ã ã‘é€Ÿåº¦å¤‰æ›´
+            // ·•ª‚¾‚¯‘¬“x•ÏX
             Vector3 deltaV = targetHoriz - horiz;
             _rigidbody.AddForce(deltaV, ForceMode.VelocityChange);
         }
     }
 
     /// <summary>
-    /// å¤‰è£…
+    /// •Ï‘•
     /// </summary>
     /// <param name="mesh"></param>
     /// <param name="material"></param>
@@ -234,7 +236,7 @@ public class PlayerCtrl : MonoBehaviour
     }
 
     /// <summary>
-    /// å¤‰è£…
+    /// •Ï‘•
     /// </summary>
     /// <param name="mesh"></param>
     /// <param name="material"></param>
@@ -243,7 +245,7 @@ public class PlayerCtrl : MonoBehaviour
         _meshFilter.mesh = mesh;
         _meshRenderer.material = material;
 
-        // ç¾åœ¨å¤‰è£…ä¸­ã®è­¦å‚™å“¡ã¨Tagã‚’å–å¾—
+        // Œ»İ•Ï‘•’†‚ÌŒx”õˆõ‚ÆTag‚ğæ“¾
         _currentDisguiseEnemy = enemy;
         _currentDisguiseTag = enemy.gameObject.tag;
         _currentDisguisePatorloArea = enemy.GetMyArea();
@@ -253,7 +255,7 @@ public class PlayerCtrl : MonoBehaviour
     }
 
     /// <summary>
-    /// å¤‰è£…ã‚’è§£ã
+    /// •Ï‘•‚ğ‰ğ‚­
     /// </summary>
     public void Undisguise()
     {
