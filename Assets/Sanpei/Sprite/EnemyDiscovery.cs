@@ -41,12 +41,19 @@ public class EnemyDiscovery : MonoBehaviour
             m_gameOverFlag = true;
         }
 
+        // 見失ったときにカウントする時間を減らしていく
+        if (!m_seePlayerFlag)
+        {
+            m_countTimeOfDiscovery -= delta;
+        }
+
         // ゲームオーバフラグがオンならゲームマネージャーにゲームオーバになったことを伝える
-        if(m_gameOverFlag)
+        if (m_gameOverFlag)
         {
             // ゲームオーバーに移行
             GameManager.Instance.GameFailed();
         }
+
     }
 
     //private void OnCollisionEnter(Collision collision)
