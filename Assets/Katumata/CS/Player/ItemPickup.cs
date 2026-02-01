@@ -53,9 +53,12 @@ public class ItemPickup
     [Header("取得時のオフセット")]
     private Transform _pickupOffset = null;
 
+    /// <summary>
+    /// 宝石を拾ったか
+    /// </summary>
     public bool IsGemPickup => _isGemPickup;
 
-    public ItemPickup(ItemPickupParam itemPickupParam, PlayerCtrl playerCtrl)
+    public ItemPickup(PlayerCtrl playerCtrl, ItemPickupParam itemPickupParam)
     {
         _radius = itemPickupParam.radius;
         _mask = itemPickupParam.mask;
@@ -109,7 +112,7 @@ public class ItemPickup
             // 一番近いアイテムを拾う
             _pickupItemObj = nearestItem;
             _pickupItemObj.transform.parent = _pickupOffset.transform;
-            _pickupItemObj.transform.position = Vector3.zero;
+            _pickupItemObj.transform.localPosition = Vector3.zero;
         }
     }
 }

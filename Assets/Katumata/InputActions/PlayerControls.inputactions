@@ -31,6 +31,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "ItemPickup",
+                    "type": "Button",
+                    "id": "5c0b3397-da5f-45de-b20a-522632f5875c",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -317,6 +326,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Knockout",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "cb8b7fb9-51dc-4a98-9042-fdb151ceb442",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ItemPickup",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
