@@ -1,3 +1,5 @@
+#define SkinnedMeshRenderer
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,10 +8,13 @@ using UnityEngine.InputSystem;
 using UnityEngine.Windows;
 
 [RequireComponent(typeof(Rigidbody))]
+
+#if SkinnedMeshRenderer
+
+#else
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
-[RequireComponent(typeof(NPCKnockout))]
-[RequireComponent(typeof(ItemPickup))]
+#endif
 public class PlayerCtrl : MonoBehaviour
 {
     [Tooltip("PL入力のInputSystem")]
@@ -72,8 +77,16 @@ public class PlayerCtrl : MonoBehaviour
     [SerializeField, Header("移動速度")]
     private float _moveSpeed = 0.0f;
 
+    [SerializeField, Header("回転速度")] 
+    private float _turnSpeed = 0.0f;
+
     [SerializeField, Header("サウンドマネージャー")]
-    private SoundManager soundManager;
+    private SoundManager _soundManager;
+
+#if SkinnedMeshRenderer
+    [SerializeField, Header("自身のSkinnedMeshRenderer")]
+    private SkinnedMeshRenderer _skinnedMeshRenderer;
+#endif
 
     /// <summary>
     /// 現在変装中の警備員のID
@@ -134,9 +147,16 @@ public class PlayerCtrl : MonoBehaviour
         _meshFilter = GetComponent<MeshFilter>();
         _meshRenderer = GetComponent<MeshRenderer>();
 
+#if SkinnedMeshRenderer
+        // 変装前の見た目を保持
+        _originalMesh = _skinnedMeshRenderer.sharedMesh;
+        _originalMat = _skinnedMeshRenderer.material;
+
+#else
         // 変装前の見た目を保持
         _originalMesh = _meshFilter.mesh;
         _originalMat = _meshRenderer.material;
+#endif
 
         // メインカメラ取得
         _cam = Camera.main;
@@ -235,6 +255,23 @@ public class PlayerCtrl : MonoBehaviour
             // 差分だけ速度変更
             Vector3 deltaV = targetHoriz - horiz;
             _rigidbody.AddForce(deltaV, ForceMode.VelocityChange);
+
+
+
+            // 回転
+            {
+                // 進行方向を向く
+                Quaternion targetRot = Quaternion.LookRotation(moveDir, Vector3.up);
+
+                // なめらかに回す
+                Quaternion newRot = Quaternion.RotateTowards(
+                    _rigidbody.rotation,
+                    targetRot,
+                    _turnSpeed * Time.fixedDeltaTime
+                );
+
+                _rigidbody.MoveRotation(newRot);
+            }
         }
     }
 
@@ -250,7 +287,7 @@ public class PlayerCtrl : MonoBehaviour
 
         _isDisguise = true;
 
-        soundManager.OnDisguise();
+        _soundManager.OnDisguise();
     }
 
     /// <summary>
@@ -269,7 +306,7 @@ public class PlayerCtrl : MonoBehaviour
         _currentDisguisePatorloArea = enemy.GetMyArea();
 
         _isDisguise = true;
-        soundManager.OnDisguise();
+        _soundManager.OnDisguise();
     }
 
     /// <summary>
@@ -277,8 +314,14 @@ public class PlayerCtrl : MonoBehaviour
     /// </summary>
     public void Undisguise()
     {
+#if SkinnedMeshRenderer
+        // 変装前の見た目を保持
+        _skinnedMeshRenderer.sharedMesh = _originalMesh;
+        _skinnedMeshRenderer.material = _originalMat;
+#else
         _meshFilter.mesh = _originalMesh;
         _meshRenderer.material = _originalMat;
+#endif
 
         _isDisguise = false;
     }
