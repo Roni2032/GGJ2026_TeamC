@@ -53,6 +53,9 @@ public class PlayerCtrl : MonoBehaviour
     [Tooltip("変装中か")]
     private bool _isDisguise = false;
 
+    [Tooltip("現在いる範囲")]
+    private PatorlArea _currentPatorlArea = null;
+
     [SerializeField, Header("NPCKnockout用パラメータ")]
     private KnockoutParam KnockoutParam = new KnockoutParam();
 
@@ -73,6 +76,23 @@ public class PlayerCtrl : MonoBehaviour
     /// 変装中か
     /// </summary>
     public bool IsDisguise => _isDisguise;
+
+    /// <summary>
+    /// 現在いる範囲
+    /// </summary>
+    public PatorlArea CurrentArea
+    {
+        get => _currentPatorlArea;
+        set
+        {
+            if (value != _currentPatorlArea)
+            {
+                _currentPatorlArea = value;
+
+                // 値変化時の処理
+            }
+        }
+    }
 
     /// <summary>
     /// 
