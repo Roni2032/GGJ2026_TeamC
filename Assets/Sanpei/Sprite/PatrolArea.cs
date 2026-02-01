@@ -5,6 +5,7 @@ using UnityEngine;
 // 警備範囲の管理
 public class PatrolArea : MonoBehaviour
 {
+    [SerializeField] int m_areaId;
     // Start is called before the first frame update
     void Start()
     {
@@ -24,6 +25,16 @@ public class PatrolArea : MonoBehaviour
         {
             playerCtrl.CurrentArea = this;
         }
+        else if(other.gameObject.TryGetComponent(out EnemyMove enemyMove))
+        {
+            enemyMove.SetMyArea(this);
+        }
 
+    }
+
+    // エリアidのゲッタ
+    public int GetAreaId()
+    {
+        return m_areaId;
     }
 }
