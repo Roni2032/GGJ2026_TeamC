@@ -54,6 +54,7 @@ public class NPCKnockout
         // ƒpƒ‰ƒ[ƒ^
         _radius = knockoutParam.radius;
         _mask = knockoutParam.mask;
+        soundManager = knockoutParam.soundManager;
 
         // RequireComponent
         {
