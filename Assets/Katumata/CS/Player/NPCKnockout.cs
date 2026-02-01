@@ -16,6 +16,9 @@ public struct KnockoutParam
 
     [Header("気絶対象のLayer")]
     public LayerMask mask;     // PLと地形を対象外にする
+
+    [Header("サウンドマネージャー")]
+    public SoundManager soundManager;
 }
 
 /// <summary>
