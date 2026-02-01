@@ -6,9 +6,9 @@ public class EnemyManager : MonoBehaviour
 {
     [SerializeField] GameObject[] m_enemys;
     // 実際の敵たちの状態
-    private bool[] m_actuallyEnemyState;
+    private bool[] m_actuallyEnemyMove;
     // 敵が把握している敵たちの状態
-    private bool[] m_graspEnemyState;
+    private bool[] m_graspEnemyMove;
 
     // Start is called before the first frame update
     void Start()
@@ -29,7 +29,7 @@ public class EnemyManager : MonoBehaviour
         // 現在の敵たちの状態を取得　敵たちが把握している敵の状態とは違う
         for (int i = 0; i > enemyNum - 1; i++)
         {
-            m_actuallyEnemyState[i] = m_enemys[i].GetComponent<EnemyMove>().GetMoveFlag();
+            m_actuallyEnemyMove[i] = m_enemys[i].GetComponent<EnemyMove>().GetMoveFlag();
         }
 
     }
@@ -43,21 +43,26 @@ public class EnemyManager : MonoBehaviour
         //    m_actuallyEnemyState[i] = true;
         //}
 
-        m_graspEnemyState[discoveryId] = false;
+        m_graspEnemyMove[discoveryId] = false;
     }
 
     // 敵たちが把握している敵の状態の更新
     // 第一引数:更新する敵のid 第二引数：現在の状態(falseならダウン、trueなら行動可能)
-    public void UpdateGraspEnemyState(int discoveryId,bool state)
+    public void UpdateGraspEnemyMove(int discoveryId,bool state)
     {
-        m_graspEnemyState[discoveryId] = state;
+        m_graspEnemyMove[discoveryId] = state;
     }
 
     // 実際の敵の状態の更新
     // 第一引数:更新する敵のid 第二引数：現在の状態(falseならダウン、trueなら行動可能)
-    public void UpdateActuallyEnemyState(int discoveryId, bool state)
+    public void UpdateActuallyEnemyMove(int discoveryId, bool state)
     {
-        m_graspEnemyState[discoveryId] = state;
+        m_graspEnemyMove[discoveryId] = state;
+    }
+
+    public bool[] GetGraspEnemyMove()
+    {
+        return m_graspEnemyMove;
     }
 
 }
