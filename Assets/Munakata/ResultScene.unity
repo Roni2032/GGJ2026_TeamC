@@ -479,9 +479,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_SuccessJingle: {fileID: 8300000, guid: fc58492fd091e8a438e083e53bdecd30, type: 3}
-  m_SuccessJingleVolume: 1
+  m_SuccessJingleVolume: 0.4
   m_FailureJingle: {fileID: 8300000, guid: ba92955d43a61234db4a450d5ea15bd3, type: 3}
-  m_FailureJingleVolume: 1
+  m_FailureJingleVolume: 0.4
 --- !u!4 &1423455322
 Transform:
   m_ObjectHideFlags: 0
