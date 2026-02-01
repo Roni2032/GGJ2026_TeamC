@@ -27,6 +27,10 @@ public class EnemyDiscovery : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        bool moveFlag = m_parentObj.GetComponent<EnemyMove>().GetMoveFlag();
+
+        if (!moveFlag) return;
+
         float delta = Time.deltaTime;
 
         if(m_seePlayerFlag)
@@ -131,6 +135,7 @@ public class EnemyDiscovery : MonoBehaviour
         @@// Œ©‚Â‚¯‚½“G‚ª“|‚ê‚Ä‚¢‚é‚±‚Æ‚É‹C‚Ã‚¢‚½‚Æ‚«“G‘S‘Ì‚É“`‚¦‚é
             if (!discoveryEnemyMoveFlag)
             {
+                Debug.Log("Œx”õˆõ‚ª“|‚ê‚Ä‚¢‚é‚Ì‚ğ”­Œ©‚µ‚½");
                 int discoveryEnemyId = enemyMove.GetId();
                 GameObject.Find("EnemyManager").GetComponent<EnemyManager>().DiscoveryDownEnemy(discoveryEnemyId);
             }
