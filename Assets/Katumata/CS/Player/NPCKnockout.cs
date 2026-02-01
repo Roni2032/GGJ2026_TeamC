@@ -35,6 +35,12 @@ public class NPCKnockout
     [Tooltip("現在気絶中のNPC")]
     private EnemyMove _currentKnockoutEnemy = null;
 
+    [Tooltip("変装前のMeshFilter")]
+    private MeshFilter _originalMeshFilter = null;
+
+    [Tooltip("変装前のMeshRenderer")]
+    private MeshRenderer _originalMeshRenderer = null;
+
     public NPCKnockout(PlayerCtrl playerCtrl, KnockoutParam knockoutParam)
     {
         _playerCtrl = playerCtrl;
@@ -42,6 +48,13 @@ public class NPCKnockout
         // パラメータ
         _radius = knockoutParam.radius;
         _mask = knockoutParam.mask;
+
+        // RequireComponent
+        {
+            // 変装前の見た目を保持
+            _originalMeshFilter = playerCtrl.gameObject.GetComponent<MeshFilter>();
+            _originalMeshRenderer = playerCtrl.gameObject.GetComponent<MeshRenderer>();
+        }
     }
     
     /// <summary>
@@ -90,6 +103,21 @@ public class NPCKnockout
             // ここで警備員の気絶処理を呼び出す
             //_currentKnockoutEnemy.なんたら();
             _currentKnockoutEnemy.SetMoveFlag(false);
+
+            // 気絶させた警備員に変装する
+            {
+                if (_currentKnockoutEnemy.gameObject.TryGetComponent(out MeshFilter meshFilter) != true)
+                {
+                    Debug.LogError("対象にMeshFilterがアタッチされていません！");
+                }
+                if (_currentKnockoutEnemy.gameObject.TryGetComponent(out MeshRenderer meshRenderer) != true)
+                {
+                    Debug.LogError("対象にMeshRendererがアタッチされていません！");
+                }
+
+                // 変装
+                _playerCtrl.Disguise(meshFilter.mesh, meshRenderer.material, _currentKnockoutEnemy);
+            }
         }
     }
 }
