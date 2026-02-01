@@ -82,8 +82,10 @@ public class EnemyMove : MonoBehaviour
                 m_animator.SetBool("isMove", false);
 
                 // ÀÛ‚Ì“G‚Ìó‘Ô‚ğ“n‚·(“G‚½‚¿©‘Ì‚Í“|‚ê‚Ä‚¢‚é“G‚ğŒ©‚È‚¢‚Æ”cˆ¬‚Å‚«‚È‚¢)
-                m_enemyManager.GetComponent<EnemyManager>().UpdateActuallyEnemyMove(m_id, true);
+                m_enemyManager.GetComponent<EnemyManager>().UpdateActuallyEnemyMove(m_id, false);
             }
+
+           // Debug.Log("Œ»İó‘Ô:" + m_moveFlag);
 
             m_moveFlagBefore = m_moveFlag;
         }
