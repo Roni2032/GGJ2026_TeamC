@@ -42,9 +42,13 @@ public class EnemyDiscovery : MonoBehaviour
         }
 
         // 見失ったときにカウントする時間を減らしていく
-        if (!m_seePlayerFlag)
+        if (!m_seePlayerFlag && m_countTimeOfDiscovery > 0.0f)
         {
             m_countTimeOfDiscovery -= delta;
+        }
+        if(m_countTimeOfDiscovery < 0.0f)
+        {
+            m_countTimeOfDiscovery = 0.0f;
         }
 
         // ゲームオーバフラグがオンならゲームマネージャーにゲームオーバになったことを伝える
@@ -66,30 +70,54 @@ public class EnemyDiscovery : MonoBehaviour
         // 怪盗を見つけた場合ゲームオーバ
         if(other.tag == "Player")
         {
-            // プレイヤーが変装しているidを取得
-            int currentDisguiseId = other.GetComponent<PlayerCtrl>().CurrentDisguiseID;
-            // プレイヤーが変装しているidを取得
-            string currentDisguiseTag = other.GetComponent<PlayerCtrl>().CurrentDisguiseTag;
+            // プレイヤーが変装しているか確認
+            bool DisguiseFlag = other.GetComponent<PlayerCtrl>().IsDisguise;
+            Debug.Log("変装しているか:" + DisguiseFlag);
 
-            // 自分のタグと同じか確認する
-            if(currentDisguiseTag == tag)
+            // プレイヤーが変装しているタグを取得
+            //string currentDisguiseTag = other.GetComponent<PlayerCtrl>().CurrentDisguiseTag;
+
+
+            // 変装している時
+            if(DisguiseFlag)
             {
-                // 倒れているのを把握できているか確認する
-                bool[] graspEnemyState = m_enemyManager.GetComponent<EnemyManager>().GetGraspEnemyMove();
+                // プレイヤーが変装しているidを取得
+                int currentDisguiseId = other.GetComponent<PlayerCtrl>().CurrentDisguiseID;
 
-                if (graspEnemyState[currentDisguiseId] == false)
+                // プレイヤーが変装している敵がパトロールしていたエリア取得
+                var disguisePatorloArea = other.GetComponent<PlayerCtrl>().CurrentDisguisePatorloArea;
+                // 現在プレイヤーがいるエリア取得
+                var playerArea = other.GetComponent<PlayerCtrl>().CurrentArea;
+
+                // 現在変装している警備員のパトロールエリアとプレイヤーがいる位置が同じ場合、その警備員が倒れているのが分かっているか確認
+                if (disguisePatorloArea == playerArea)
                 {
-                    Debug.Log("変装した怪盗を見つけた！");
+                    // 倒れているのを把握できているか確認する
+                    bool[] graspEnemyState = m_enemyManager.GetComponent<EnemyManager>().GetGraspEnemyMove();
 
-                    // プレイヤーを見たフラグオン
-                    m_seePlayerFlag = true;
+                    // 倒れているのが分かっている
+                    if (graspEnemyState[currentDisguiseId] == false)
+                    {
+                        Debug.Log("変装した怪盗を見つけた！");
 
+                        // プレイヤーを見たフラグオン
+                        m_seePlayerFlag = true;
+
+                    }
                 }
-
+                // 変装している警備員のパトロールエリア出なかった時怪盗なのがばれる
+                else if (disguisePatorloArea != playerArea)
+                {
+                    Debug.Log("お前何故担当から外れている!");
+                    m_seePlayerFlag = true;
+                }
             }
-            // ゲームオーバーに移行
-            //GameManager.Instance.GameFailed();
-            
+            // 変装していない時
+            else if(!DisguiseFlag)
+            {
+                m_seePlayerFlag = true;
+            }
+
         }
         //Debug.Log("ぶつかった");
 
