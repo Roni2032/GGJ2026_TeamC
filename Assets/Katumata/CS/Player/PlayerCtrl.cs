@@ -246,7 +246,7 @@ public class PlayerCtrl : MonoBehaviour
         _currentDisguiseTag = enemy.gameObject.tag;
         _currentDisguisePatorloArea = enemy.GetMyArea();
 
-        _isDisguise = false;
+        _isDisguise = true;
     }
 
     /// <summary>
@@ -256,5 +256,7 @@ public class PlayerCtrl : MonoBehaviour
     {
         _meshFilter.mesh = _originalMesh;
         _meshRenderer.material = _originalMat;
+
+        _isDisguise = false;
     }
 }
