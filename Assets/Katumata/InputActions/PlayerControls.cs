@@ -24,7 +24,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     ""name"": ""PlayerControls"",
     ""maps"": [
         {
-            ""name"": ""Direction"",
+            ""name"": ""Player"",
             ""id"": ""995792ab-712d-47ac-bbd4-2adf1cf7c101"",
             ""actions"": [
                 {
@@ -40,6 +40,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""name"": ""Vertical"",
                     ""type"": ""Button"",
                     ""id"": ""8e8a66b3-c34d-4b46-a4da-a0476e3da328"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Knockout"",
+                    ""type"": ""Button"",
+                    ""id"": ""54f8ea14-d17b-492c-9ed1-6c9ecdf86b12"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -310,16 +319,39 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""action"": ""Vertical"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e8856d39-dc23-4d12-a309-bfe2dfa023a6"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Knockout"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0c61cbb0-b6fc-408d-a9fe-baed1807911b"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Knockout"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
     ],
     ""controlSchemes"": []
 }");
-        // Direction
-        m_Direction = asset.FindActionMap("Direction", throwIfNotFound: true);
-        m_Direction_Horizontal = m_Direction.FindAction("Horizontal", throwIfNotFound: true);
-        m_Direction_Vertical = m_Direction.FindAction("Vertical", throwIfNotFound: true);
+        // Player
+        m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
+        m_Player_Horizontal = m_Player.FindAction("Horizontal", throwIfNotFound: true);
+        m_Player_Vertical = m_Player.FindAction("Vertical", throwIfNotFound: true);
+        m_Player_Knockout = m_Player.FindAction("Knockout", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -378,35 +410,40 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         return asset.FindBinding(bindingMask, out action);
     }
 
-    // Direction
-    private readonly InputActionMap m_Direction;
-    private List<IDirectionActions> m_DirectionActionsCallbackInterfaces = new List<IDirectionActions>();
-    private readonly InputAction m_Direction_Horizontal;
-    private readonly InputAction m_Direction_Vertical;
-    public struct DirectionActions
+    // Player
+    private readonly InputActionMap m_Player;
+    private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
+    private readonly InputAction m_Player_Horizontal;
+    private readonly InputAction m_Player_Vertical;
+    private readonly InputAction m_Player_Knockout;
+    public struct PlayerActions
     {
         private @PlayerControls m_Wrapper;
-        public DirectionActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Horizontal => m_Wrapper.m_Direction_Horizontal;
-        public InputAction @Vertical => m_Wrapper.m_Direction_Vertical;
-        public InputActionMap Get() { return m_Wrapper.m_Direction; }
+        public PlayerActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Horizontal => m_Wrapper.m_Player_Horizontal;
+        public InputAction @Vertical => m_Wrapper.m_Player_Vertical;
+        public InputAction @Knockout => m_Wrapper.m_Player_Knockout;
+        public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
         public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(DirectionActions set) { return set.Get(); }
-        public void AddCallbacks(IDirectionActions instance)
+        public static implicit operator InputActionMap(PlayerActions set) { return set.Get(); }
+        public void AddCallbacks(IPlayerActions instance)
         {
-            if (instance == null || m_Wrapper.m_DirectionActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_DirectionActionsCallbackInterfaces.Add(instance);
+            if (instance == null || m_Wrapper.m_PlayerActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_PlayerActionsCallbackInterfaces.Add(instance);
             @Horizontal.started += instance.OnHorizontal;
             @Horizontal.performed += instance.OnHorizontal;
             @Horizontal.canceled += instance.OnHorizontal;
             @Vertical.started += instance.OnVertical;
             @Vertical.performed += instance.OnVertical;
             @Vertical.canceled += instance.OnVertical;
+            @Knockout.started += instance.OnKnockout;
+            @Knockout.performed += instance.OnKnockout;
+            @Knockout.canceled += instance.OnKnockout;
         }
 
-        private void UnregisterCallbacks(IDirectionActions instance)
+        private void UnregisterCallbacks(IPlayerActions instance)
         {
             @Horizontal.started -= instance.OnHorizontal;
             @Horizontal.performed -= instance.OnHorizontal;
@@ -414,26 +451,30 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Vertical.started -= instance.OnVertical;
             @Vertical.performed -= instance.OnVertical;
             @Vertical.canceled -= instance.OnVertical;
+            @Knockout.started -= instance.OnKnockout;
+            @Knockout.performed -= instance.OnKnockout;
+            @Knockout.canceled -= instance.OnKnockout;
         }
 
-        public void RemoveCallbacks(IDirectionActions instance)
+        public void RemoveCallbacks(IPlayerActions instance)
         {
-            if (m_Wrapper.m_DirectionActionsCallbackInterfaces.Remove(instance))
+            if (m_Wrapper.m_PlayerActionsCallbackInterfaces.Remove(instance))
                 UnregisterCallbacks(instance);
         }
 
-        public void SetCallbacks(IDirectionActions instance)
+        public void SetCallbacks(IPlayerActions instance)
         {
-            foreach (var item in m_Wrapper.m_DirectionActionsCallbackInterfaces)
+            foreach (var item in m_Wrapper.m_PlayerActionsCallbackInterfaces)
                 UnregisterCallbacks(item);
-            m_Wrapper.m_DirectionActionsCallbackInterfaces.Clear();
+            m_Wrapper.m_PlayerActionsCallbackInterfaces.Clear();
             AddCallbacks(instance);
         }
     }
-    public DirectionActions @Direction => new DirectionActions(this);
-    public interface IDirectionActions
+    public PlayerActions @Player => new PlayerActions(this);
+    public interface IPlayerActions
     {
         void OnHorizontal(InputAction.CallbackContext context);
         void OnVertical(InputAction.CallbackContext context);
+        void OnKnockout(InputAction.CallbackContext context);
     }
 }

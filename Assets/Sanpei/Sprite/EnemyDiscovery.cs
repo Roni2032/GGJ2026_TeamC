@@ -30,12 +30,30 @@ public class EnemyDiscovery : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        // 怪盗を見つけた場合ゲームオーバ
         if(other.tag == "Player")
         {
             Debug.Log("怪盗を見つけた！");
             m_gameOverFlag = true;
+            // ゲームオーバーに移行
+            GameManager.Instance.GameFailed();
             
         }
         //Debug.Log("ぶつかった");
+
+        // 敵(警備員)を見つけた処理
+        if(other.tag == "Enemy")
+        {
+            // 見つけた敵の状態を確認する
+            EnemyMove enemyMove = other.GetComponent<EnemyMove>();
+            bool discoveryEnemyMoveFlag = enemyMove.GetMoveFlag();
+
+        　　// 見つけた敵が倒れていることに気づいたとき敵全体に伝える
+            if (!discoveryEnemyMoveFlag)
+            {
+                int discoveryEnemyId = enemyMove.GetId();
+                GameObject.Find("EnemyManager").GetComponent<EnemyManager>().DiscoveryDownEnemy(discoveryEnemyId);
+            }
+        }
     }
 }
