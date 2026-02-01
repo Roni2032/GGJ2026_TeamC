@@ -76,6 +76,7 @@ public class ItemPickup
     /// <param name="context"></param>
     public void Pickup(InputAction.CallbackContext context)
     {
+        Debug.Log("èEÇ®Ç§Ç©Ç»ÅH");
         const string GEM_TAG = "Gem";
 
         Collider[] others = Physics.OverlapSphere(
@@ -113,6 +114,7 @@ public class ItemPickup
             _pickupItemObj = nearestItem;
             _pickupItemObj.transform.parent = _pickupOffset.transform;
             _pickupItemObj.transform.localPosition = Vector3.zero;
+            _isGemPickup = true;
         }
     }
 }
