@@ -41,6 +41,9 @@ public class NPCKnockout
     [Tooltip("変装前のMeshRenderer")]
     private MeshRenderer _originalMeshRenderer = null;
 
+    [SerializeField, Header("サウンドマネージャー")]
+    private SoundManager soundManager;
+
     public NPCKnockout(PlayerCtrl playerCtrl, KnockoutParam knockoutParam)
     {
         _playerCtrl = playerCtrl;
@@ -103,6 +106,7 @@ public class NPCKnockout
             // ここで警備員の気絶処理を呼び出す
             //_currentKnockoutEnemy.なんたら();
             _currentKnockoutEnemy.SetMoveFlag(false);
+            soundManager.OnStrike();
 
             // 気絶させた警備員に変装する
             {
