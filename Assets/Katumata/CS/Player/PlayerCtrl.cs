@@ -1,3 +1,5 @@
+#define SkinnedMeshRenderer
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,9 +8,14 @@ using UnityEngine.InputSystem;
 using UnityEngine.Windows;
 
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(Animator))]
+
+#if SkinnedMeshRenderer
+
+#else
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
-[RequireComponent(typeof(NPCKnockout))]
+#endif
 public class PlayerCtrl : MonoBehaviour
 {
     [Tooltip("PL入力のInputSystem")]
@@ -41,6 +48,9 @@ public class PlayerCtrl : MonoBehaviour
     [Tooltip("範囲内のNPCを気絶させる")]
     private NPCKnockout _npcKnockout = null;
 
+    [Tooltip("アイテムを拾う")]
+    private ItemPickup _itemPickup = null;
+
     [Tooltip("使用中のカメラ")]
     private Camera _cam = null;
 
@@ -59,14 +69,29 @@ public class PlayerCtrl : MonoBehaviour
     [Tooltip("現在いる範囲")]
     private PatrolArea _currentPatorlArea = null;
 
+    [Tooltip("アニメ－ション")]
+    private Animator _anim = null;
+
     [SerializeField, Header("NPCKnockout用パラメータ")]
-    private KnockoutParam KnockoutParam = new KnockoutParam();
+    private KnockoutParam _knockoutParam = new KnockoutParam();
+
+    [SerializeField, Header("ItemPickup用パラメータ")]
+    private ItemPickupParam _itemPickupParam = new ItemPickupParam();
 
     [SerializeField, Header("移動速度")]
     private float _moveSpeed = 0.0f;
 
+    [SerializeField, Header("回転速度")] 
+    private float _turnSpeed = 0.0f;
+
     [SerializeField, Header("サウンドマネージャー")]
-    private SoundManager soundManager;
+    private SoundManager _soundManager;
+
+#if SkinnedMeshRenderer
+    [SerializeField, Header("自身のSkinnedMeshRenderer")]
+    private SkinnedMeshRenderer _skinnedMeshRenderer;
+#endif
+
     /// <summary>
     /// 現在変装中の警備員のID
     /// </summary>
@@ -86,6 +111,11 @@ public class PlayerCtrl : MonoBehaviour
     /// 変装中か
     /// </summary>
     public bool IsDisguise => _isDisguise;
+
+    /// <summary>
+    /// 宝石を拾ったか
+    /// </summary>
+    public bool IsGemPickup => _itemPickup.IsGemPickup;
 
     /// <summary>
     /// 現在いる範囲
@@ -110,19 +140,29 @@ public class PlayerCtrl : MonoBehaviour
     private void Awake()
     {
         // 初期インスタンス作成
-        _npcKnockout = new NPCKnockout(this, KnockoutParam);
+        _npcKnockout = new NPCKnockout(this, _knockoutParam);
+        _itemPickup = new ItemPickup(this, _itemPickupParam);
 
         // PlayerControlsの初期設定
         InputSystemInitSetting();
 
         // RequireComponent
         _rigidbody = GetComponent<Rigidbody>();
+        _anim = GetComponent<Animator>();
+
+#if SkinnedMeshRenderer
+        // 変装前の見た目を保持
+        _originalMesh = _skinnedMeshRenderer.sharedMesh;
+        _originalMat = _skinnedMeshRenderer.material;
+
+#else
         _meshFilter = GetComponent<MeshFilter>();
         _meshRenderer = GetComponent<MeshRenderer>();
 
         // 変装前の見た目を保持
         _originalMesh = _meshFilter.mesh;
         _originalMat = _meshRenderer.material;
+#endif
 
         // メインカメラ取得
         _cam = Camera.main;
@@ -159,6 +199,10 @@ public class PlayerCtrl : MonoBehaviour
             // Knockoutに割り当てる
             var knockout = _playerInput.Player.Knockout;
             knockout.started += _npcKnockout.Knockout;
+
+            // ItemPickupに割り当てる
+            var itemPickup = _playerInput.Player.ItemPickup;
+            itemPickup.started += _itemPickup.Pickup;
         }
     }
 
@@ -217,6 +261,27 @@ public class PlayerCtrl : MonoBehaviour
             // 差分だけ速度変更
             Vector3 deltaV = targetHoriz - horiz;
             _rigidbody.AddForce(deltaV, ForceMode.VelocityChange);
+
+            // 移動アニメーション
+            float moveAmount = Mathf.Clamp01(moveDir.magnitude);
+            OnMoveAnim(moveAmount);
+
+
+
+            // 回転
+            {
+                // 進行方向を向く
+                Quaternion targetRot = Quaternion.LookRotation(moveDir, Vector3.up);
+
+                // なめらかに回す
+                Quaternion newRot = Quaternion.RotateTowards(
+                    _rigidbody.rotation,
+                    targetRot,
+                    _turnSpeed * Time.fixedDeltaTime
+                );
+
+                _rigidbody.MoveRotation(newRot);
+            }
         }
     }
 
@@ -232,7 +297,7 @@ public class PlayerCtrl : MonoBehaviour
 
         _isDisguise = true;
 
-        soundManager.OnDisguise();
+        _soundManager.OnDisguise();
     }
 
     /// <summary>
@@ -251,7 +316,7 @@ public class PlayerCtrl : MonoBehaviour
         _currentDisguisePatorloArea = enemy.GetMyArea();
 
         _isDisguise = true;
-        soundManager.OnDisguise();
+        _soundManager.OnDisguise();
     }
 
     /// <summary>
@@ -259,9 +324,32 @@ public class PlayerCtrl : MonoBehaviour
     /// </summary>
     public void Undisguise()
     {
+#if SkinnedMeshRenderer
+        // 変装前の見た目を保持
+        _skinnedMeshRenderer.sharedMesh = _originalMesh;
+        _skinnedMeshRenderer.material = _originalMat;
+#else
         _meshFilter.mesh = _originalMesh;
         _meshRenderer.material = _originalMat;
+#endif
 
         _isDisguise = false;
+    }
+
+    public void OnKnockoutAnim() => _anim.SetBool("IsStrik", true);    // 気絶
+    //public void OffKnockoutAnim() => _anim.SetBool("IsStrik", false);
+    public void OnPickupAnim() => _anim.SetBool("IsSteel", true);    // 拾う
+    //public void OffPickupAnim() => _anim.SetBool("IsSteel", false);
+    private void OnIdleAnim() => _anim.SetBool("Idle", true);        // アイドリング
+    private void OffIdleAnim() => _anim.SetBool("Idle", false);
+    private void OnMoveAnim(float currentSpeed)
+    {
+        if (Mathf.Approximately(currentSpeed, 0.0f))
+        {
+            OnIdleAnim();
+            return;
+        }
+        OffIdleAnim();
+        _anim.SetFloat("Move", currentSpeed);          // 移動
     }
 }

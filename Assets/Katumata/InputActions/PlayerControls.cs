@@ -53,6 +53,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ItemPickup"",
+                    ""type"": ""Button"",
+                    ""id"": ""5c0b3397-da5f-45de-b20a-522632f5875c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -341,6 +350,17 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""action"": ""Knockout"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cb8b7fb9-51dc-4a98-9042-fdb151ceb442"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ItemPickup"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -352,6 +372,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_Player_Horizontal = m_Player.FindAction("Horizontal", throwIfNotFound: true);
         m_Player_Vertical = m_Player.FindAction("Vertical", throwIfNotFound: true);
         m_Player_Knockout = m_Player.FindAction("Knockout", throwIfNotFound: true);
+        m_Player_ItemPickup = m_Player.FindAction("ItemPickup", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -416,6 +437,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Horizontal;
     private readonly InputAction m_Player_Vertical;
     private readonly InputAction m_Player_Knockout;
+    private readonly InputAction m_Player_ItemPickup;
     public struct PlayerActions
     {
         private @PlayerControls m_Wrapper;
@@ -423,6 +445,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         public InputAction @Horizontal => m_Wrapper.m_Player_Horizontal;
         public InputAction @Vertical => m_Wrapper.m_Player_Vertical;
         public InputAction @Knockout => m_Wrapper.m_Player_Knockout;
+        public InputAction @ItemPickup => m_Wrapper.m_Player_ItemPickup;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -441,6 +464,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Knockout.started += instance.OnKnockout;
             @Knockout.performed += instance.OnKnockout;
             @Knockout.canceled += instance.OnKnockout;
+            @ItemPickup.started += instance.OnItemPickup;
+            @ItemPickup.performed += instance.OnItemPickup;
+            @ItemPickup.canceled += instance.OnItemPickup;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -454,6 +480,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Knockout.started -= instance.OnKnockout;
             @Knockout.performed -= instance.OnKnockout;
             @Knockout.canceled -= instance.OnKnockout;
+            @ItemPickup.started -= instance.OnItemPickup;
+            @ItemPickup.performed -= instance.OnItemPickup;
+            @ItemPickup.canceled -= instance.OnItemPickup;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -476,5 +505,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         void OnHorizontal(InputAction.CallbackContext context);
         void OnVertical(InputAction.CallbackContext context);
         void OnKnockout(InputAction.CallbackContext context);
+        void OnItemPickup(InputAction.CallbackContext context);
     }
 }

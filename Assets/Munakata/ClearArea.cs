@@ -23,15 +23,16 @@ public class ClearArea : MonoBehaviour
         if(obj.tag == "Player")
         {
             Debug.Log("てめえぷれいやーだな！！！");
-            //ここで盗んだものを持っているか判別
-            if (true)
+            var pickup = obj.GetComponent<PlayerCtrl>();
+            if(pickup != null)
             {
-                GameManager.Instance.GameClear();
+                if (pickup.IsGemPickup)
+                {
+                    GameManager.Instance.GameClear();
+                    return;
+                }
             }
-            else
-            {
-                Debug.Log("盗むもん盗んでから来やがれ！！");
-            }
+            Debug.Log("盗むもん盗んでから来やがれ！！");
         }
     }
 }

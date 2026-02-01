@@ -1,9 +1,12 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+
+#if UNITY_EDITOR
+using System.Collections;
+using System.Collections.Generic;
 using static UnityEngine.EventSystems.EventTrigger;
+#endif
 
 /// <summary>
 /// NPCKnockout用パラメータ
@@ -44,7 +47,7 @@ public class NPCKnockout
     [Tooltip("変装前のMeshRenderer")]
     private MeshRenderer _originalMeshRenderer = null;
 
-    [SerializeField, Header("サウンドマネージャー")]
+    [Tooltip("サウンドマネージャー")]
     private SoundManager soundManager;
 
     public NPCKnockout(PlayerCtrl playerCtrl, KnockoutParam knockoutParam)
@@ -63,8 +66,9 @@ public class NPCKnockout
             _originalMeshRenderer = playerCtrl.gameObject.GetComponent<MeshRenderer>();
         }
     }
-    
+
     /// <summary>
+    /// 気絶させる。<br/>
     /// PLのInputSystemに割り当てる
     /// </summary>
     public void Knockout(InputAction.CallbackContext context)
@@ -111,6 +115,7 @@ public class NPCKnockout
             //_currentKnockoutEnemy.なんたら();
             _currentKnockoutEnemy.SetMoveFlag(false);
             soundManager.OnStrike();
+            _playerCtrl.OnKnockoutAnim();
 
             // 気絶させた警備員に変装する
             {
