@@ -612,7 +612,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f82e79848550c9648afdbdca0ba7bea0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resultImage: {fileID: 0}
+  resultImage: {fileID: 918694381}
+  clear: {fileID: -2011682460, guid: 48a0ec57caf94f745a35b6620fb5d54a, type: 3}
+  failed: {fileID: -733192365, guid: 8b8377b735a499b43af9f98a923e241e, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

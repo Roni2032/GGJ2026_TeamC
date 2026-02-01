@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Munakata/TitleScene.unity
+    guid: 8c7646f7edca7ee4a8028fe280eae1cc
+  - enabled: 1
     path: Assets/Munakata/MunakataStage.unity
     guid: 92553c423aeefb54cbdd85e6a1b19c9b
   - enabled: 1
