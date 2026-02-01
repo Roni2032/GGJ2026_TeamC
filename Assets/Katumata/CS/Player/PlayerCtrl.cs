@@ -50,6 +50,12 @@ public class PlayerCtrl : MonoBehaviour
     [Tooltip("現在変装中の警備員のTag")]
     private string _currentDisguiseTag = string.Empty;
 
+    [Tooltip("変装中か")]
+    private bool _isDisguise = false;
+
+    [Tooltip("現在いる範囲")]
+    private PatorlArea _currentPatorlArea = null;
+
     [SerializeField, Header("NPCKnockout用パラメータ")]
     private KnockoutParam KnockoutParam = new KnockoutParam();
 
@@ -65,6 +71,28 @@ public class PlayerCtrl : MonoBehaviour
     /// 現在変装中の警備員のTag
     /// </summary>
     public string CurrentDisguiseTag => _currentDisguiseTag;
+
+    /// <summary>
+    /// 変装中か
+    /// </summary>
+    public bool IsDisguise => _isDisguise;
+
+    /// <summary>
+    /// 現在いる範囲
+    /// </summary>
+    public PatorlArea CurrentArea
+    {
+        get => _currentPatorlArea;
+        set
+        {
+            if (value != _currentPatorlArea)
+            {
+                _currentPatorlArea = value;
+
+                // 値変化時の処理
+            }
+        }
+    }
 
     /// <summary>
     /// 
@@ -191,6 +219,8 @@ public class PlayerCtrl : MonoBehaviour
     {
         _meshFilter.mesh = mesh;
         _meshRenderer.material = material;
+
+        _isDisguise = true;
     }
 
     /// <summary>
@@ -206,6 +236,8 @@ public class PlayerCtrl : MonoBehaviour
         // 現在変装中の警備員とTagを取得
         _currentDisguiseEnemy = enemy;
         _currentDisguiseTag = enemy.gameObject.tag;
+
+        _isDisguise = false;
     }
 
     /// <summary>
