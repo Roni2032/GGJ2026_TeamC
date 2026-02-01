@@ -16,6 +16,8 @@ public class EnemyMove : MonoBehaviour
 
     // 自分のID
     private int m_id;
+    // 自分の管轄エリア
+    private PatrolArea m_myArea;
 
     // 敵マネージャ
     [SerializeField] GameObject m_enemyManager;
@@ -104,7 +106,7 @@ public class EnemyMove : MonoBehaviour
             // 回転処理
             Quaternion rot = transform.rotation;
             Quaternion targetRot = Quaternion.LookRotation(moveVec);
-            Debug.Log(targetRot);
+            //Debug.Log(targetRot);
             rot = Quaternion.Lerp(rot, targetRot, 0.25f);
             transform.rotation = rot;
 
@@ -189,5 +191,16 @@ public class EnemyMove : MonoBehaviour
     public void SetId(int id)
     {
         m_id = id;
+    }
+
+    // 自分の管轄するエリアのセッタ
+    public void SetMyArea(PatrolArea myArea)
+    {
+        m_myArea = myArea;
+    }
+    // 自分の管轄するエリアのゲッタ
+    public PatrolArea GetMyArea()
+    {
+        return m_myArea;
     }
 }
