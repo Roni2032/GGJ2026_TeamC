@@ -29,6 +29,7 @@ public class PlayerCtrl : MonoBehaviour
 
     [Tooltip("入力方向")]
     private Vector3 _inputDirection = Vector3.zero;
+    private Vector3 _lastMoveDir = Vector3.zero;
 
     [Tooltip("自身のRigidbody")]
     private Rigidbody _rigidbody = null;
@@ -213,6 +214,17 @@ public class PlayerCtrl : MonoBehaviour
     private void Horizontal(InputAction.CallbackContext context)
     {
         _inputDirection.x = context.ReadValue<float>();
+
+        if (_inputDirection.z >= 0.5f || _inputDirection.z < -0.5f
+            || _inputDirection.x >= 0.5f || _inputDirection.x < -0.5f)
+        {
+            OnMoveAnim();
+            ;
+        }
+        else
+        {
+            OffMoveAnim();
+        }
     }
 
     /// <summary>
@@ -222,6 +234,16 @@ public class PlayerCtrl : MonoBehaviour
     private void Vertical(InputAction.CallbackContext context)
     {
         _inputDirection.z = context.ReadValue<float>();
+
+        if (_inputDirection.z >= 0.5f || _inputDirection.z < -0.5f
+            || _inputDirection.x >= 0.5f || _inputDirection.x < -0.5f)
+        {
+            OnMoveAnim();
+        }
+        else
+        {
+            OffMoveAnim();
+        }
     }
 
     void FixedUpdate()
@@ -262,18 +284,19 @@ public class PlayerCtrl : MonoBehaviour
             Vector3 deltaV = targetHoriz - horiz;
             _rigidbody.AddForce(deltaV, ForceMode.VelocityChange);
 
-            // 移動アニメーション
-            float moveAmount = Mathf.Clamp01(moveDir.magnitude);
-            OnMoveAnim(moveAmount);
-
 
 
             // 回転
             {
-                // 進行方向を向く
-                Quaternion targetRot = Quaternion.LookRotation(moveDir, Vector3.up);
+                const float deadZoneSqr = 0.0001f;
 
-                // なめらかに回す
+                if (moveDir.sqrMagnitude > deadZoneSqr)
+                {
+                    _lastMoveDir = moveDir.normalized; // 入力があるときだけ更新
+                }
+
+                Quaternion targetRot = Quaternion.LookRotation(_lastMoveDir, Vector3.up);
+
                 Quaternion newRot = Quaternion.RotateTowards(
                     _rigidbody.rotation,
                     targetRot,
@@ -340,16 +363,6 @@ public class PlayerCtrl : MonoBehaviour
     //public void OffKnockoutAnim() => _anim.SetBool("IsStrik", false);
     public void OnPickupAnim() => _anim.SetBool("IsSteel", true);    // 拾う
     //public void OffPickupAnim() => _anim.SetBool("IsSteel", false);
-    private void OnIdleAnim() => _anim.SetBool("Idle", true);        // アイドリング
-    private void OffIdleAnim() => _anim.SetBool("Idle", false);
-    private void OnMoveAnim(float currentSpeed)
-    {
-        if (Mathf.Approximately(currentSpeed, 0.0f))
-        {
-            OnIdleAnim();
-            return;
-        }
-        OffIdleAnim();
-        _anim.SetFloat("Move", currentSpeed);          // 移動
-    }
+    private void OnMoveAnim() => _anim.SetBool("Move", true);   // 移動
+    private void OffMoveAnim() => _anim.SetBool("Move", false);
 }
