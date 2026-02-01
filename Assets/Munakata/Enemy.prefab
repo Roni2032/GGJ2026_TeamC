@@ -9,16 +9,28 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: f56cb1eef4cf5c74fac2af6706f7c24a, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f56cb1eef4cf5c74fac2af6706f7c24a, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f56cb1eef4cf5c74fac2af6706f7c24a, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f56cb1eef4cf5c74fac2af6706f7c24a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 30.051882
+      value: -16.104294
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f56cb1eef4cf5c74fac2af6706f7c24a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.512
+      value: 0.5000005
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f56cb1eef4cf5c74fac2af6706f7c24a, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -13.898175
+      value: -41.823524
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f56cb1eef4cf5c74fac2af6706f7c24a, type: 3}
       propertyPath: m_LocalRotation.w
@@ -50,7 +62,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: f56cb1eef4cf5c74fac2af6706f7c24a, type: 3}
       propertyPath: m_Name
-      value: Walking
+      value: Enemy
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
