@@ -68,19 +68,22 @@ public class EnemyManager : MonoBehaviour
     // 第一引数:更新する敵のid 第二引数：現在の状態(falseならダウン、trueなら行動可能)
     public void UpdateActuallyEnemyMove(int discoveryId, bool state)
     {
-        //// stateがfalseになるのは1人しかないのでいったんリセット
-        //if(!state)
-        //{
-        //    for (int i = 0; i < m_graspEnemyMove.Length - 1; i++)
-        //    {
-        //        //m_enemys[i].GetComponent<EnemyMove>().SetMoveFlag(true);
-        //    }
-        //}
+        // stateがfalseになるのは1人しかないのでいったんリセット
+        if (!state)
+        {
+            for (int i = 0; i < m_graspEnemyMove.Length - 1; i++)
+            {
+                m_enemys[i].GetComponent<EnemyMove>().SetMoveFlag(true);
+            }
+        }
 
-        Debug.Log("選択しているid:" + discoveryId);
-        Debug.Log("敵の状態の配列の要素最大数:" + (m_graspEnemyMove.Length - 1));
+        //Debug.Log("選択しているid:" + discoveryId);
+        //Debug.Log("変更している:" + state);
+        //Debug.Log("敵の状態の配列の要素最大数:" + (m_graspEnemyMove.Length - 1));
         m_graspEnemyMove[discoveryId] = state;
-        //m_enemys[discoveryId].GetComponent<EnemyMove>().SetMoveFlag(state);
+        m_enemys[discoveryId].GetComponent<EnemyMove>().SetMoveFlag(state);
+        //Debug.Log("選択しているid:" + discoveryId);
+
     }
 
     public bool[] GetGraspEnemyMove()
